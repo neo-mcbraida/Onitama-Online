@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="=col-8">
+    <form action="/Lobby/Index" id="myform" method="get">
+        <input type="text" id="usesname" value="enter name" />
+        <input type="text" id="myquery" name="myquery" value="choose lobby name" />
+        <input type="submit" id="newpage"  />
+    </form>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <ul id="messagesList"></ul>
+    </div>
+</div>
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
