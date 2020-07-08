@@ -1,5 +1,4 @@
-﻿"use strict";
-
+﻿
 var dragItem = document.querySelector("#item");
 var container = document.querySelector("#container");
 
@@ -7,12 +6,6 @@ var container = document.querySelector("#container");
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //starts connection between browser and server
-
-window.onload = function () {
-    var game = new Game(container, dragItem);
-    game.start();
-
-};
 
 
 
@@ -22,6 +15,17 @@ const userName = urlParams.get('userName');
 //these two lines get the roomId query that is in the URL
 //Disable send button until connection is established
 //document.getElementById("sendButton").disabled = true;
+
+
+window.onload = function () {
+    var game = new Game(container, dragItem, userName);
+    game.start();
+
+};
+
+connection.on("recieveInfo", function (clients) {
+
+});
 
 connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client
     //converts specific symbols into format that html can output, and protects from script Injection

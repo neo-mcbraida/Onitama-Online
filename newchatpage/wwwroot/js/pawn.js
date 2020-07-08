@@ -42,20 +42,23 @@ class Pawn {
 
     }
 
-    dragStart(e) {
 
 
-        console.log(this.domElement);
-        if (e.type === "touchstart") {
-            this.initialX = e.touches[0].clientX - this.xOffset;
-            this.initialY = e.touches[0].clientY - this.yOffset;
-        } else {
-            this.initialX = e.clientX - this.xOffset;//client is mouse pos
-            this.initialY = e.clientY - this.yOffset;
-        }
+    dragStart(e, move) {
 
-        if (e.target === this.domElement) {
-            this.active = true;
+        if(move) {
+            console.log(this.domElement);
+            if (e.type === "touchstart") {
+                this.initialX = e.touches[0].clientX - this.xOffset;
+                this.initialY = e.touches[0].clientY - this.yOffset;
+            } else {
+                this.initialX = e.clientX - this.xOffset;//client is mouse pos
+                this.initialY = e.clientY - this.yOffset;
+            }
+
+            if (e.target === this.domElement) {
+                this.active = true;
+            }
         }
     }
 
@@ -65,27 +68,28 @@ class Pawn {
         //this.xOffset = 0;
         //this.yOffset = 0;
 
+        if (this.active) {
+            this.xIndex = this.GetClosest(board, this.currentX);
+            this.yIndex = this.GetClosest(board, (this.currentY));
 
-        this.xIndex = this.GetClosest(board, this.currentX);
-        this.yIndex = this.GetClosest(board, (this.currentY));
+            this.currentX = board[this.xIndex];
+            this.currentY = board[this.yIndex];
 
-        this.currentX = board[this.xIndex];
-        this.currentY = board[this.yIndex];
+            this.setTranslate(this.currentX, this.currentY, this.domElement);
 
-        this.setTranslate(this.currentX, this.currentY, this.domElement);
+            this.initialX = this.currentX;
+            this.initialY = this.currentY;
+            this.xOffset = this.currentX;
+            this.yOffset = this.currentY;
+            //if (this.start == 1) {
 
-        this.initialX = this.currentX;
-        this.initialY = this.currentY;
-        this.xOffset = this.currentX;
-        this.yOffset = this.currentY;
-        //if (this.start == 1) {
+            //    var x = this.initialX.GetClosest(this.board, this.initialX)
+            //    var y = this.initialY.GetClosest(this.board, this.initialY)
+            //    this.DOMelement.style.transform = "translate3d(" + this.boardx[x] + "px, " + this.board[y] + "px, 0)";
+            //}
 
-        //    var x = this.initialX.GetClosest(this.board, this.initialX)
-        //    var y = this.initialY.GetClosest(this.board, this.initialY)
-        //    this.DOMelement.style.transform = "translate3d(" + this.boardx[x] + "px, " + this.board[y] + "px, 0)";
-        //}
-
-        this.active = false;
+            this.active = false;
+        }
     }
 
 

@@ -11,6 +11,8 @@ namespace newchatpage.Hubs
     /// </summary>
     public class ChatHub : Hub
     {
+
+        public int clients = 0;
         /// <summary>
         /// 
         /// </summary>
@@ -36,6 +38,8 @@ namespace newchatpage.Hubs
             //joins client to specific group, 1st arg is essentially a browser specific cleint name
             //2nd arg is group name
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+            clients++;
+            await Clients.Group(roomId).SendAsync("recieveInfo", clients);
         }
     }
 }
