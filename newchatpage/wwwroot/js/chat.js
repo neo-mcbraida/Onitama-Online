@@ -1,16 +1,32 @@
 ﻿"use strict";
 
+var dragItem = document.querySelector("#item");
+var container = document.querySelector("#container");
+
+
+
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+//starts connection between browser and server
+
+window.onload = function () {
+    var game = new Game(container, dragItem);
+    game.start();
+
+};
+
+
 
 const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('roomId');//these two lines get the roomId query that is in the URL
+const roomId = urlParams.get('roomId');
+const userName = urlParams.get('userName');
+//these two lines get the roomId query that is in the URL
 //Disable send button until connection is established
 //document.getElementById("sendButton").disabled = true;
 
-connection.on("ReceiveMessage", function (user, message) {//this adds any new message revieved to ordered list for each client
+connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client
     //converts specific symbols into format that html can output, and protects from script Injection
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg;
+    var encodedMsg = userName + ": " + msg;
     var li = document.createElement("li");
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
@@ -25,10 +41,9 @@ connection.start().then(function () {//this runs the function in ChatHub called 
 
 //wire up event handler to send message to hub when send button clicked
 document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
     var message = document.getElementById("messageInput").value;
     //runs function 'SendMessage' with given aguments
-    connection.invoke("SendMessage", user, message, roomId).catch(function (err) {
+    connection.invoke("SendMessage", userName, message, roomId).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();

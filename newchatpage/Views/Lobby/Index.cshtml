@@ -1,8 +1,46 @@
 ﻿<div class="container">
     <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4"><input type="text" id="userInput" /></div>
+    @*<div class="row">
+            <div class="col-2">User</div>
+            <div class="col-4"><input type="text" id="userInput" /></div>
+        </div>*@
+
+
+    <style>
+
+
+        #container {
+            width: 500px;
+            height: 500px;
+            background-image: url("/assets/grid.png");
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: #e8eaec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 7px;
+            touch-action: none;
+        }
+
+        #item {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(245, 230, 99);
+            border-radius: 50%;
+            touch-action: none;
+            user-select: none;
+        }
+    </style>
+
+    <div id="outerContainer">
+        <div id="container">
+            <div id="item">
+
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-2">Message</div>
@@ -25,5 +63,8 @@
         <ul id="messagesList"></ul>
     </div>
 </div>
+<script src="~/js/pawn.js"></script>
+<script src="~/js/game.js"></script>
+<script src="~/js/Grid.js"></script>
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>

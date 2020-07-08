@@ -3,12 +3,24 @@
 }
 
 <div class="=col-8">
-    <form action="/Lobby/Index" id="myform" method="get">
-        <input type="text" id="username" name="username" placeholder="enter name" />
+    <form action="/Lobby/Index" id="joinForm" method="get">
+        <input type="text" id="userName" name="userName" placeholder="enter name" />
         <input type="text" id="roomId" name="roomId" placeholder="choose lobby id" />
-        <input type="submit" id="join" />
+        <input type="button" name="join "id="join" />
     </form>
 </div>
+<script>
+    var userName = document.getElementById('userName');
+    var roomId = document.getElementById('roomId');
+    document.getElementById('join').addEventListener('click', function () {
+        if (roomId.value != "" && userName.value != "") {
+            document.getElementById('joinForm').submit();
+            //submits form if both fields are filled in
+        } else {
+            alert("fill in both fields to join or start a game");
+        }
+    });
+</script>
 <div class="row">
     <div class="col-12">
         <hr />

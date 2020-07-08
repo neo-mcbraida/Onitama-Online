@@ -16,11 +16,11 @@ namespace newchatpage.Hubs
         /// </summary>
         /// <param name="user"></param>
         /// <param name="message"></param>
-        /// <param name="roomId"></param>
+        /// <param name="roomId"></param>  
         /// <returns></returns>
         public async Task SendMessage(string user, string message, string roomId)
         {
-            if(message != "" || user != ""){//validation check to stop users sending blank messages
+            if(message != ""){//validation check to stop users sending blank messages
                 //for all clients in group 'groupId', runs function RecieveMessage in chat.js
                 await Clients.Group(roomId).SendAsync("ReceiveMessage", user, message);
             }

@@ -1753,7 +1753,7 @@
     var start = order ? element1 : element2;
     var end = order ? element2 : element1;
 
-    // Get common ancestor container
+    // Get common ancestor this.domElement
     var range = document.createRange();
     range.setStart(start, 0);
     range.setEnd(end, 0);
@@ -3628,7 +3628,7 @@
        * @prop {number} padding=5
        * Amount of pixel used to define a minimum distance between the boundaries
        * and the popper. This makes sure the popper always has a little padding
-       * between the edges of its container
+       * between the edges of its this.domElement
        */
       padding: 5,
       /**
