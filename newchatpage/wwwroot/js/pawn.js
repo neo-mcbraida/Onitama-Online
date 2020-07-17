@@ -1,13 +1,17 @@
 ﻿/// <reference path="grid.js" />
 class Pawn {
-    constructor(_item) {
-        console.log(this.domPawn);
+    constructor(_item, connection) {
         this.domElement = _item;
         this.active = false;
         this.currentX;
         this.currentY;
+        this.connection = connection;
         this.xOffset = 0;
         this.yOffset = 0;
+        this.xIndexCur = 0;
+        this.yIndexCur = 0;
+        this.xIndexPrev = 0;//store index instead of coordinate
+        this.yIndexPrev = 0;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
     }
 
 
@@ -17,7 +21,7 @@ class Pawn {
     }//put this back in but idk why its not working
 
 
-    drag(e) {
+    drag(e, roomId) {
         if (this.active) {
 
             e.preventDefault();
@@ -29,24 +33,29 @@ class Pawn {
                 this.currentX = e.clientX - this.initialX;
                 this.currentY = e.clientY - this.initialY;
 
-                console.log(this.currentX, this.currentY);
             }
-
+            this.SendCoordinate(roomId);
+            console.log(this.currentX, this.currentY);
             //this.xOffset = this.currentX;
             //this.yOffset = this.currentY;
 
 
             this.setTranslate(this.currentX, this.currentY, this.domElement);
+            
             //this.DOMelement.style.transform = "translate3d(" + this.currentX + "px, " + this.currentY + "px, 0)";
+
+            //if (this.onDrag != null) {
+            //    this.onDrag(this);
+            //}
         }
+
 
     }
 
 
 
-    dragStart(e, move) {
+    dragStart(e) {
 
-        if(move) {
             console.log(this.domElement);
             if (e.type === "touchstart") {
                 this.initialX = e.touches[0].clientX - this.xOffset;
@@ -59,21 +68,23 @@ class Pawn {
             if (e.target === this.domElement) {
                 this.active = true;
             }
-        }
+        
     }
 
-
+    //method to send coordinates to chat hub
 
     dragEnd(e, board) {
         //this.xOffset = 0;
         //this.yOffset = 0;
 
         if (this.active) {
-            this.xIndex = this.GetClosest(board, this.currentX);
-            this.yIndex = this.GetClosest(board, (this.currentY));
+            this.xIndexCur = this.GetClosest(board, this.currentX);
+            this.yIndexCur = this.GetClosest(board, (this.currentY));
 
-            this.currentX = board[this.xIndex];
-            this.currentY = board[this.yIndex];
+            this.currentX = board[this.xIndexCur];
+            this.currentY = board[this.yIndexCur];
+
+            
 
             this.setTranslate(this.currentX, this.currentY, this.domElement);
 
@@ -81,14 +92,21 @@ class Pawn {
             this.initialY = this.currentY;
             this.xOffset = this.currentX;
             this.yOffset = this.currentY;
+
+            if (true) {
+                this.xIndexPrev = this.xIndexCur;
+                this.yIndexPrev = this.yIndexCur;
+                this.SwapMove(roomId);
+            }
             //if (this.start == 1) {
 
             //    var x = this.initialX.GetClosest(this.board, this.initialX)
             //    var y = this.initialY.GetClosest(this.board, this.initialY)
             //    this.DOMelement.style.transform = "translate3d(" + this.boardx[x] + "px, " + this.board[y] + "px, 0)";
             //}
-
+            this.SendCoordinate(roomId);
             this.active = false;
+            
         }
     }
 
@@ -108,5 +126,15 @@ class Pawn {
         return index;
     }
 
+    //EndEventListener(grid) {
+    //    grid.containder.removeEventListender
+    //}
+    SendCoordinate(roomId) {
+        this.connection.invoke("SendCoordinate", this, roomId);
+    }
+
+    SwapMove(roomId) {
+        this.connection.invoke("SwapMove", roomId);
+    }
 }
 
