@@ -1,16 +1,8 @@
-﻿
-var dragItem = document.querySelector("#item");
+﻿var dragItem = document.querySelector("#item");
 var container = document.querySelector("#container");
-
-
-
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-var userId;
-var playerTurn;
 //starts connection between browser and server
-
-
-
+var game;
 const urlParams = new URLSearchParams(window.location.search);
 const roomId = urlParams.get('roomId');
 const userName = urlParams.get('userName');
@@ -18,44 +10,49 @@ const userName = urlParams.get('userName');
 //Disable send button until connection is established
 //document.getElementById("sendButton").disabled = true;
 
-var game; //= new Game();
-connection.on("SendGameInfo", function (_userId) {
+connection.on("SendGameInfo", function (userId) {
 
-    //game = new Game(container, null, dragItem, newUserId, connection, roomId);
-    game.players.push(_userId);
+    game.players.push(userId);
+    //if this client was the first to join a game this client invokes
+    //method that sends the game info to th client that called the method
     if (game.players[0] == game.userId) {
-        connection.invoke("EchoGameInfo", game, _userId)
-        //game.playerTurn = newUserId;
-        //game.players.push(newUserId);
-        //game.start();
+        connection.invoke("EchoGameInfo", game, userId);
     }
-    //else if (game.players[0] == game.userId) {
-    //    connection.invoke("EchoGameInfo", game.players, game.playerTurn, userId);
-    //    game.players.add(userId);
-    //}
 
 });
 
-connection.on("CreateSelf", function (roomId, userId) {
+connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game
     game = new Game(container, null, dragItem, userId, connection, roomId)
 });
 
-connection.on("recieveCoordinates", function (pawn) {
-    game.board.MovePiece(pawn);
-});
 
 connection.on("RecieveGameInfo", function (_game, _userId) {
+    //recieves game info and updates its own instance of Game 
+    //so the it has the same game values as the other client
     game.players = _game.players;
     game.userId = _userId;
+    //invokes a method that starts game for all clients in room
     connection.invoke("StartGame", game.roomId);
 });
 
 
 
 connection.on("StartGame", function () {
+    //runs start method in game
     game.start();  
 });
 
+
+connection.on("recieveCoordinates", function (pawn) {
+    //moves pawn to coordinates that other client has it at
+    game.board.MovePiece(pawn);
+});
+
+
+connection.on("SwapMove", function () {
+    //runs game method swaps move of players
+    game.SwapTurn();
+});
 
 connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client
     //converts specific symbols into format that html can output, and protects from script Injection
@@ -84,7 +81,3 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     event.preventDefault();
 });
 
-
-connection.on("SwapMove", function () {
-    game.SwapTurn();
-});

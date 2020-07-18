@@ -12,7 +12,7 @@ namespace newchatpage.Controllers
         public IActionResult Index()
         {
             //When user requestd /Lobby render the view that lets them create/join room 
-            return View("~/Views/Lobby/Index.cshtml");
+            return View("~/Views/Game/game.cshtml");
         }
     }
 }

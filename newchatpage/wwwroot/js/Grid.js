@@ -6,6 +6,8 @@ class Grid {
         this.roomId = roomId
         this.connection = connection
         this.pawn = pawn
+
+        //put these methods in the constructor, so that event listeners can add and remove them
         this.DragStart = function(e) {
             pawn.dragStart(e);
         }
@@ -15,63 +17,24 @@ class Grid {
         this.DragEnd = function(e) {
             pawn.dragEnd(e, [-200, -100, 0, 100, 200]);
         }
+    }
 
-        //this.pawn.onDrag = new function (e) {
-
-        //}
-
-    }// procedurally populate array
-
-    //EndMove() {
-    //    var board = this.board;
-    //    var _pawn = this.pawn;
-    //    var roomId = this.roomId
-
-    //    function DragStart(e) {
-    //        _pawn.dragStart(e);
-    //    }
-
-    //    function Drag(e) {
-    //        _pawn.drag(e, roomId);
-    //    }
-
-    //    function DragEnd(e) {
-    //        _pawn.dragEnd(e, board);
-    //    }
-
-
-
-    //}
 
     Move(canMove) {
-        var board = this.board;
-        var _pawn = this.pawn;
-        var roomId = this.roomId
 
-        //function DragStart(e){
-        //    _pawn.dragStart(e);
-        //}
-
-        //function Drag(e) {
-        //    _pawn.drag(e, roomId);
-        //}
-
-        //function DragEnd(e) {
-        //    _pawn.dragEnd(e, board);
-        //}
-
+        //if it is players turn
         if (canMove === true) {
+            //for mouse
             this.container.addEventListener("mousedown", this.DragStart, false);
             this.container.addEventListener("mouseup", this.DragEnd, false);
             this.container.addEventListener("mousemove", this.Drag, false);
-
+            //for touchscreen
             this.container.addEventListener("touchstart", this.DragStart, false);
             this.container.addEventListener("touchend", this.DragEnd, false);
             this.container.addEventListener("touchmove", this.Drag, false);
-        } else if (canMove === false) {
-            //this.container.removeEventListener("mousedown", DragStart, false);
-            //this.EndMove();
 
+        //if it is not players turn
+        } else if (canMove === false) {
 
             this.container.removeEventListener("mousedown", this.DragStart, false);
             this.container.removeEventListener("mouseup", this.DragEnd, false);
@@ -85,8 +48,9 @@ class Grid {
     }
 
     MovePiece(_pawn) {
+        //moving pawn to coordinates that other player has moved it to
         this.pawn.setTranslate(_pawn.currentX, _pawn.currentY, this.pawn.domElement);
-        var i = this.pawn.domElement;
+        //updating pawn info to that of the other player
         this.pawn.currentX = _pawn.currentX;
         this.pawn.currentY = _pawn.currentY;
         this.pawn.xOffset = _pawn.xOffset;;
@@ -95,7 +59,5 @@ class Grid {
         this.pawn.yIndexCur = _pawn.yIndexCur;
         this.pawn.xIndexPrev = _pawn.xIndexPrev;
         this.pawn.yIndexPrev = _pawn.yIndexPrev;
-        //this.pawn.domElement = i;
-        //this.pawn = _pawn;
     }
 }
