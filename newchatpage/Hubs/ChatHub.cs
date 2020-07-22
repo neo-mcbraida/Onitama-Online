@@ -41,11 +41,18 @@ namespace newchatpage.Hubs
         }
 
 
-        public async Task SendCoordinate(object pawn, string roomId)
+        public async Task Move(object pawn, string roomId, bool dStart)
         {
             //sends to coordinates of piece being moved to all clients in lobby except the
             //one the invoked the method
-            await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("recieveCoordinates", pawn); 
+            //if (dStart == true)
+            //{
+            //    await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync()
+            //}
+            //else
+            //{
+            await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("Move", pawn, dStart);
+            //}
         }
 
         public async Task StartGame(string roomId)

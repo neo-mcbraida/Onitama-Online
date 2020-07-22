@@ -1,4 +1,4 @@
-﻿var dragItem = document.querySelector("#item");
+﻿
 var container = document.querySelector("#container");
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //starts connection between browser and server
@@ -22,7 +22,7 @@ connection.on("SendGameInfo", function (userId) {
 });
 
 connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game
-    game = new Game(container, null, dragItem, userId, connection, roomId)
+    game = new Game(container, userId, connection, roomId)
 });
 
 
@@ -43,9 +43,13 @@ connection.on("StartGame", function () {
 });
 
 
-connection.on("recieveCoordinates", function (pawn) {
+connection.on("Move", function (pawn, dStart) {
     //moves pawn to coordinates that other client has it at
-    game.board.MovePiece(pawn);
+    if (dStart === true) {
+        game.board.SetActive(pawn);
+    } else {
+        game.board.MovePiece(pawn);
+    }
 });
 
 
