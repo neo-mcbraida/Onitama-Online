@@ -17,8 +17,9 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-color: #e8eaec;
-            display: flex;
-            align-items: center;
+            position: relative;
+            /*display: flex;*/
+            /*align-items: center;*/
             justify-content: center;
             overflow: hidden;
             border-radius: 7px;
@@ -28,30 +29,61 @@
         .item {
             width: 100px;
             height: 100px;
-            background-color: rgb(245, 230, 99);
+            background-color: #0e5cbb;
             border-radius: 50%;
             touch-action: none;
             user-select: none;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+        }
+        .item2 {
+            width: 100px;
+            height: 100px;
+            background-color: #e81a1a;
+            border-radius: 50%;
+            touch-action: none;
+            user-select: none;
+            position: absolute;
+            top: 400px;
+            left: 0px;
         }
 
 
     </style>
 
     <div id="outerContainer">
+        
         <div id="container">
-            <div class="item" id="item1">
+
+            <div class="item" id="item1" >
 
             </div>
-            <div class="item" id="item2">
+            <div class="item" id="item2" style="left:100px;">
 
             </div>
-            <div class="item" id="item3">
+            <div class="item" id="item3" style="left:200px;">
 
             </div>
-            <div class="item" id="item4">
+            <div class="item" id="item4" style="left:300px;">
 
             </div>
-            <div class="item" id="item5">
+            <div class="item" id="item5" style="left:400px;">
+
+            </div>
+            <div class="item2" id="item6">
+
+            </div>
+            <div class="item2" id="item7" style="left:100px;">
+
+            </div>
+            <div class="item2" id="item8" style="left:200px;">
+
+            </div>
+            <div class="item2" id="item9" style="left:300px;">
+
+            </div>
+            <div class="item2" id="item10" style="left:400px;">
 
             </div>
         </div>

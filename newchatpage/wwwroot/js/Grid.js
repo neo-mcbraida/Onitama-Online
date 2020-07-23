@@ -9,28 +9,28 @@
         this.p3 = new Pawn(document.querySelector("#item3"), connection, 3);
         this.p4 = new Pawn(document.querySelector("#item4"), connection, 4);
         this.p5 = new Pawn(document.querySelector("#item5"), connection, 5);
-        this.pawns = [this.p1, this.p2, this.p3, this.p4, this.p5]
+
+        this.p6 = new Pawn(document.querySelector("#item6"), connection, 6);
+        this.p7 = new Pawn(document.querySelector("#item7"), connection, 7);
+        this.p8 = new Pawn(document.querySelector("#item8"), connection, 8);
+        this.p9 = new Pawn(document.querySelector("#item9"), connection, 9);
+        this.p10 = new Pawn(document.querySelector("#item10"), connection, 10);
+
+        this.player = [this.p1, this.p2, this.p3, this.p4, this.p5]
+
+
+        this.opponent = [this.p6, this.p7, this.p8, this.p9, this.p10]
+
         this.activeItem = new Pawn(null, connection, 0);
         this.pIndex = 0;
-        this.activePawns = [];
         this.domElement;
-        //put these methods in the constructor, so that event listeners can add and remove them
-        //this.DragStart = function (e) {
-        //    pawn.dragStart(e, activeItem);
-        //};
-        //this.Drag = function (e) {
-        //    pawn.drag(e, roomId, this.activeItem);
-        //};
-        //this.DragEnd = function (e) {
-        //    pawn.dragEnd(e, [-200, -100, 0, 100, 200], this.activeItem);
-        //};
     }
 
 
     Move() {
         //var a = this.active;
         //if it is players turn
-        var pawns = this.pawns;
+        var pawns = this.player;
         var board = this.board;
         var activeItem = this.activeItem;
         var roomId = this.roomId;
@@ -72,31 +72,31 @@
         //    this.container.removeEventListener("touchstart", this.DragStart, false);
         //    this.container.removeEventListener("touchend", this.DragEnd, false);
         //    this.container.removeEventListener("touchmove", this.Drag, false);
-            
+
         //}
     }
 
     SetActive(_pawn) {
-        var pawns = this.pawns;
+        var pawns = this.opponent;
         var i;
         for (i = 0; i < pawns.length; i++) {
             if (_pawn.id == pawns[i].id) {
                 this.pIndex = i;
                 break;
-               // a.domElement = i.domElement;
+                // a.domElement = i.domElement;
             }
-            
+
         }
 
-        //pawns.forEach(function (i) {
+        //player.forEach(function (i) {
         //});
     }
 
     MovePiece(_pawn) {
         //moving pawn to coordinates that other player has moved it to
         //  var i = this.pIndex;
-        //var x = this.pawns;
-        var pawn = this.pawns[this.pIndex];
+        //var x = this.player;
+        var pawn = this.opponent[this.pIndex];
         pawn.setTranslate(_pawn.currentX, _pawn.currentY);
         //updating pawn info to that of the other player
         pawn.currentX = _pawn.currentX;

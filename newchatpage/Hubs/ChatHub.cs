@@ -15,7 +15,8 @@ namespace newchatpage.Hubs
 
         public async Task SendMessage(string user, string message, string roomId)
         {
-            if(message != ""){//validation check to stop users sending blank messages
+            if (message != "")
+            {//validation check to stop users sending blank messages
                 //for all clients in group 'roomId', runs function RecieveMessage in chat.js
                 await Clients.Group(roomId).SendAsync("ReceiveMessage", user, message);
             }
@@ -31,13 +32,13 @@ namespace newchatpage.Hubs
             await Clients.Client(userId).SendAsync("CreateSelf", roomId, userId);
             //if there are other clients in group, will run method that sends state of game
             await Clients.GroupExcept(roomId, userId).SendAsync("SendGameInfo", userId);
-           
+
         }
 
-        public async Task EchoGameInfo(object game, string userId)
+        public async Task EchoGameInfo(string[] players, string userId)
         {
             //sends game info to new clients that requested it
-            await Clients.Client(userId).SendAsync("RecieveGameInfo", game, userId);            
+            await Clients.Client(userId).SendAsync("RecieveGameInfo", players, userId);
         }
 
 

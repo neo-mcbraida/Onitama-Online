@@ -16,7 +16,7 @@ connection.on("SendGameInfo", function (userId) {
     //if this client was the first to join a game this client invokes
     //method that sends the game info to th client that called the method
     if (game.players[0] == game.userId) {
-        connection.invoke("EchoGameInfo", game, userId);
+        connection.invoke("EchoGameInfo", game.players, userId);
     }
 
 });
@@ -26,10 +26,10 @@ connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game
 });
 
 
-connection.on("RecieveGameInfo", function (_game, _userId) {
+connection.on("RecieveGameInfo", function (_players, _userId) {
     //recieves game info and updates its own instance of Game 
     //so the it has the same game values as the other client
-    game.players = _game.players;
+    game.players = _players;
     game.userId = _userId;
     //invokes a method that starts game for all clients in room
     connection.invoke("StartGame", game.roomId);
@@ -39,7 +39,7 @@ connection.on("RecieveGameInfo", function (_game, _userId) {
 
 connection.on("StartGame", function () {
     //runs start method in game
-    game.start();  
+    game.start();
 });
 
 
@@ -69,7 +69,7 @@ connection.on("ReceiveMessage", function (userName, message) {//this adds any ne
 
 connection.start().then(function () {//this runs the function in ChatHub called join room after the connection is established
     connection.invoke("joinRoom", roomId).catch(function (err) {//and passes roomId as an argument
-    return console.error(err.toString());
+        return console.error(err.toString());
     });
     event.preventDefault();
 

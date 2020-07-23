@@ -57,7 +57,7 @@
             if (e.type === "touchmove") {
                 this.currentX = e.touches[0].clientX - this.initialX;
                 this.currentY = e.touches[0].clientY - this.initialY;
-            //mouse
+                //mouse
             } else {
                 this.currentX = e.clientX - this.initialX;
                 this.currentY = e.clientY - this.initialY;
@@ -107,7 +107,7 @@
             //sends coordinate of new position
             this.Move(roomId, false);
             this.active = false;
-            
+
         }
     }
 
@@ -145,4 +145,3 @@
         this.id = id;
     }
 }
-
