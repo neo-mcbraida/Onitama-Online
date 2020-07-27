@@ -1,7 +1,7 @@
 ﻿class Grid {
     constructor(container, connection, roomId, canMove) {
         this.container = container;
-        this.board = [-200, -100, 0, 100, 200];
+        this.board = [0, 100, 200, 300, 400];
         this.roomId = roomId;
         this.connection = connection;
         this.p1 = new Pawn(document.querySelector("#item1"), connection, 1);
@@ -26,6 +26,15 @@
         this.domElement;
     }
 
+    SetPos() {
+        for (var i = 0; i < this.board.length; i++) {
+            this.player[i].initialX = this.board[i];
+            this.player[i].initialY = -200;
+
+            this.opponent[i].initialX = this.board[i];
+            this.opponent[i].initialY = 200;
+        }
+    }
 
     Move() {
         //var a = this.active;
@@ -42,13 +51,15 @@
                     activeItem.domElement = i.domElement;
                 }
             });
-            activeItem.dragStart(e, activeItem);
+            activeItem.dragStart(e);
         };
         function Drag(e) {
-            activeItem.drag(e, roomId, activeItem);
+            if (activeItem != null) {
+                activeItem.drag(e, roomId);
+            }
         };
         function DragEnd(e) {
-            activeItem.dragEnd(e, board, activeItem);
+            activeItem.dragEnd(e, board);
             activeItem = null;
         };
 
@@ -97,7 +108,7 @@
         //  var i = this.pIndex;
         //var x = this.player;
         var pawn = this.opponent[this.pIndex];
-        pawn.setTranslate(_pawn.currentX, _pawn.currentY);
+        pawn.setTranslate(_pawn.left, _pawn.top);
         //updating pawn info to that of the other player
         pawn.currentX = _pawn.currentX;
         pawn.currentY = _pawn.currentY;
@@ -107,6 +118,8 @@
         pawn.yIndexCur = _pawn.yIndexCur;
         pawn.xIndexPrev = _pawn.xIndexPrev;
         pawn.yIndexPrev = _pawn.yIndexPrev;
+        pawn.left = _pawn.left;
+        pawn.top = _pawn.top;
 
 
 

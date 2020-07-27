@@ -16,6 +16,7 @@
         
         var _players = this.players;
         var _userId = this.userId;
+        this.board.SetPos();
         if (_players[0] !== _userId) {
 
             var pHolder = this.board.player;
