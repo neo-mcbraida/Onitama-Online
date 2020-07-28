@@ -26,6 +26,7 @@
         this.domElement;
     }
 
+
     Start() {
       
         //if it is players turn
@@ -34,22 +35,31 @@
         var activeItem = this.activeItem;
         var roomId = this.roomId;
 
+        for (var i = 0; i < 5; i++) {
+            pawns[i].SetCoordinate(board);
+            this.opponent[i].SetCoordinate(board);
+        }
+
         function DragStart(e) {
             pawns.forEach(function (i) {
                 if (e.target == i.domElement) {
                     activeItem = i;
+                    activeItem.dragStart(e);
                 }
             });
-            activeItem.dragStart(e);
         };
         function Drag(e) {
-            if (activeItem != null) {
-                activeItem.drag(e, roomId);
+            if (e != null) {
+                if (activeItem != null) {
+                    activeItem.drag(e, roomId);
+                }
             }
         };
         function DragEnd(e) {
-            activeItem.dragEnd(e, board);
-            activeItem = null;
+            if (activeItem != null) {
+                activeItem.dragEnd(e, board);
+                activeItem = null;
+            }
         };
 
         //for mouse

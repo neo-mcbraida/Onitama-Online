@@ -13,7 +13,12 @@
         this.canMove = true;
     }
 
-
+    SetCoordinate(board) {
+        this.top = parseInt(this.domElement.style.top, 10);//remove "px" from top and converts to int
+        this.left = parseInt(this.domElement.style.left, 10);
+        this.yIndexPrev = this.GetClosest(board, this.top);
+        this.xIndexPrev = this.GetClosest(board, this.left);
+    }
 
     setTranslate(xPos, yPos) {
         //moves dom element to coordinates specified
