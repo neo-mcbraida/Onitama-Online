@@ -12,11 +12,13 @@ namespace newchatpage.Hubs
 {
     public class ChatHub : Hub
     {
+        //public string _roomId { get; set; }
 
         public async Task SendMessage(string user, string message, string roomId)
         {
             if (message != "")
-            {//validation check to stop users sending blank messages
+            {
+                //validation check to stop users sending blank messages
                 //for all clients in group 'roomId', runs function RecieveMessage in chat.js
                 await Clients.Group(roomId).SendAsync("ReceiveMessage", user, message);
             }
@@ -28,6 +30,7 @@ namespace newchatpage.Hubs
             //joins client to specific group, 1st arg is essentially a browser specific cleint name
             //2nd arg is group name
             await Groups.AddToGroupAsync(userId, roomId);
+            //await _roomId = roomId;
             //runs method that instantiate game instance
             await Clients.Client(userId).SendAsync("CreateSelf", roomId, userId);
             //if there are other clients in group, will run method that sends state of game
@@ -45,15 +48,9 @@ namespace newchatpage.Hubs
         public async Task Move(object pawn, string roomId, bool dStart)
         {
             //sends to coordinates of piece being moved to all clients in lobby except the
-            //one the invoked the method
-            //if (dStart == true)
-            //{
-            //    await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync()
-            //}
-            //else
-            //{
+            
             await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("Move", pawn, dStart);
-            //}
+            
         }
 
         public async Task StartGame(string roomId)

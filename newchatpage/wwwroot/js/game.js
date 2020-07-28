@@ -35,6 +35,11 @@
         var canMove = !this.canMove;
         this.canMove = canMove;
         this.board.canMove = canMove;
+
+        var u = this.board.player;
+        u.forEach(function (i) {
+            i.canMove = canMove;
+        });
     }
     
 

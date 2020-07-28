@@ -8,7 +8,6 @@ const roomId = urlParams.get('roomId');
 const userName = urlParams.get('userName');
 //these two lines get the roomId query that is in the URL
 //Disable send button until connection is established
-//document.getElementById("sendButton").disabled = true;
 
 connection.on("SendGameInfo", function (userId) {
 

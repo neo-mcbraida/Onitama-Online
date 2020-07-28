@@ -10,6 +10,7 @@
         this.yIndexCur;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
         this.xIndexPrev;
         this.yIndexPrev;
+        this.canMove = true;
     }
 
 
@@ -22,19 +23,18 @@
 
 
     dragStart(e) {
+        if (this.canMove) {
+            this.Move(roomId, true);
 
-        this.Move(roomId, true);
-
-        //if object clicked on is this pawn
-        if (e.target === this.domElement) {
-            this.active = true;
+            //if object clicked on is this pawn
+            if (e.target === this.domElement) {
+                this.active = true;
+            }
         }
-        
     }
 
 
     drag(e, roomId) {
-
         //active = true if this pawn is the one being dragged
         if (this.active) {
             e.preventDefault();
