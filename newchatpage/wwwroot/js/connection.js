@@ -1,5 +1,5 @@
 ﻿
-var container = document.querySelector("#container");
+var container = document.querySelector("#board");
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 //starts connection between browser and server
 var game;

@@ -13,15 +13,24 @@
 
     start() {
         //runs Move method in board, if player was first to join
-        
+
         var _players = this.players;
         var _userId = this.userId;
+        this.board.PopulatePawns();
+        this.board.PopulateCards();
         if (_players[0] !== _userId) {
-
+            this.board.playerDeck = document.querySelector("#deck2");
+            this.board.opponentDeck = document.querySelector("#deck1");
+            var playerCard = this.board.playerCard;
+            this.board.playerCard = this.board.opponentCard;
+            this.board.opponentCard = playerCard;
             var pHolder = this.board.player;
             this.board.player = this.board.opponent;
             this.board.opponent = pHolder;
             this.SwapTurn();
+        } else {
+            this.board.playerDeck = document.querySelector("#deck1");
+            this.board.opponentDeck = document.querySelector("#deck2");
         }
 
         this.board.activeItem = null
