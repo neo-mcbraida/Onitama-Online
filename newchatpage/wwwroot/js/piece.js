@@ -5,11 +5,13 @@
         this.active = false;
         this.connection = connection;
         this.top;
-        this.left;
+        this.left;           
         this.xIndexCur;//store index instead of coordinate
         this.yIndexCur;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
         this.xIndexPrev;
         this.yIndexPrev;
+        this.yOffset;
+        this.xOffset;
         this.canMove = true; 
         this.container = '#board';
         
@@ -29,10 +31,27 @@
     }
 
 
-    dragStart(e) {
+    dragStart(e, container) {
         if (this.canMove) {
             this.Move(roomId, true);
 
+
+            e.preventDefault();
+
+            var deckOffset = $(container).offset();
+            var _Yoffset = parseInt(this.domElement.style.top, 10)
+            var _Xoffset = parseInt(this.domElement.style.left, 10)
+
+            if (e.type === "touchstart") {
+                this.yOffset = e.touches[0].pageY - (_Yoffset + deckOffset.top);
+                this.xOffset = e.touches[0].pageX - (_Xoffset + deckOffset.left);
+            } else {
+                this.yOffset = e.pageY - (_Yoffset + deckOffset.top);
+                this.xOffset = e.pageX - (_Xoffset + deckOffset.left);
+            }
+
+            console.log(this.yOffset);
+            console.log(this.xOffset);
             //if object clicked on is this pawn
             if (e.target === this.domElement) {
                 this.active = true;
@@ -41,20 +60,21 @@
     }
 
 
-    drag(e, roomId) {
+    drag(e, roomId, container) {
         //active = true if this pawn is the one being dragged
         if (this.active) {
             e.preventDefault();
 
-            var offset = $(this.container).offset();
-            //touchscreen
+
+            var offset = $(container).offset();
+
             if (e.type === "touchmove") {
-                this.top = (e.touches[0].pageY - offset.top) - 50;
-                this.left = (e.touches[0].pageX - offset.left) - 50;
+                this.top = (e.touches[0].pageY - (this.yOffset + offset.top));
+                this.left = (e.touches[0].pageX - (this.xOffset + offset.left));
                 //mouse
             } else {
-                this.top = (e.pageY - offset.top) - 50;
-                this.left = (e.pageX - offset.left) - 50;
+                this.top = (e.pageY - (this.yOffset + offset.top));// - 50;
+                this.left = (e.pageX - (this.xOffset + offset.left));// - 50;
                 //this.currentX = e.clientX - this.initialX;
                 //this.currentY = e.clientY - this.initialY;
 
@@ -140,12 +160,11 @@
 }
 
 class Pawn extends Piece {
-    constructor(name, domElement, id, colour, type) {
+    constructor(domElement, connection, id, colour, type) {
 
-        super(name, domElement, id);
+        super(domElement, connection, id);
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
-        
         //this.id = id;
         //this.domElement = _item;
         //this.active = false;
@@ -166,7 +185,8 @@ class Pawn extends Piece {
 }
 
 class Card extends Piece{
-    constructor(xIndex, yIndex, colour, source) {
+    constructor(xIndex, yIndex, colour, source, domElement, connection, id) {
+        super(domElement, connection, id)
         this.xIndex = xIndex;
         this.yIndex = yIndex;
         this.colour = colour;//add colour attribute to Piece rather as cards and pawns have a colour
@@ -180,11 +200,5 @@ class Card extends Piece{
     SetActive(active) {
         console.log(active);
         active = this;
-    }
-
-    StartMove() {
-        this.domElement.add.addEventListener("mousedown", DragStart, false);
-        this.domElement.addEventListener("mouseup", DragEnd, false);
-        this.domElement.addEventListener("mousemove", Drag, false);
     }
 }

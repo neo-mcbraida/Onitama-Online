@@ -16,8 +16,8 @@
 
         var _players = this.players;
         var _userId = this.userId;
-        this.board.PopulatePawns();
-        this.board.PopulateCards();
+       // this.board.PopulatePawns();
+       // this.board.PopulateCards();
         if (_players[0] !== _userId) {
             this.board.playerDeck = document.querySelector("#deck2");
             this.board.opponentDeck = document.querySelector("#deck1");

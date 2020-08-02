@@ -4,26 +4,27 @@
         this.opponentDeck;
         this.playerDeck;
         this.board = [0, 100, 200, 300, 400];
+
         this.roomId = roomId;
         this.connection = connection;
         this.canMove = true;
-        this.p1 = new Pawn(document.querySelector("#item1"), connection, 1);
-        this.p2 = new Pawn(document.querySelector("#item2"), connection, 2);
-        this.p3 = new Pawn(document.querySelector("#item3"), connection, 3);
-        this.p4 = new Pawn(document.querySelector("#item4"), connection, 4);
-        this.p5 = new Pawn(document.querySelector("#item5"), connection, 5);
+        this.p1 = new Pawn(document.querySelector("#item1"), connection, 1, 0, 0);
+        this.p2 = new Pawn(document.querySelector("#item2"), connection, 2, 0, 0);
+        this.p3 = new Pawn(document.querySelector("#item3"), connection, 3, 0, 1);
+        this.p4 = new Pawn(document.querySelector("#item4"), connection, 4, 0, 0);
+        this.p5 = new Pawn(document.querySelector("#item5"), connection, 5, 0, 0);
 
-        this.p6 = new Pawn(document.querySelector("#item6"), connection, 6);
-        this.p7 = new Pawn(document.querySelector("#item7"), connection, 7);
-        this.p8 = new Pawn(document.querySelector("#item8"), connection, 8);
-        this.p9 = new Pawn(document.querySelector("#item9"), connection, 9);
-        this.p10 = new Pawn(document.querySelector("#item10"), connection, 10);
+        this.p6 = new Pawn(document.querySelector("#item6"), connection, 6, 1, 0);
+        this.p7 = new Pawn(document.querySelector("#item7"), connection, 7, 1, 0);
+        this.p8 = new Pawn(document.querySelector("#item8"), connection, 8, 1, 1);
+        this.p9 = new Pawn(document.querySelector("#item9"), connection, 9, 1, 0);
+        this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
 
-        this.c1 = new Piece(document.querySelector("#card1"), connection, 1);
-        this.c2 = new Piece(document.querySelector("#card2"), connection, 2);
-        this.c3 = new Piece(document.querySelector("#card3"), connection, 3);
-        this.c4 = new Piece(document.querySelector("#card4"), connection, 4);
-        this.c5 = new Piece(document.querySelector("#card5"), connection, 5);
+        this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/bat.jpg")', document.querySelector("#card1"), connection, 1);
+        this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/bison.jpg")', document.querySelector("#card2"), connection, 2);
+        this.c3 = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/bear.jpg")', document.querySelector("#card3"), connection, 3);
+        this.c4 = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")', document.querySelector("#card4"), connection, 4);
+        this.c5 = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")', document.querySelector("#card5"), connection, 5);
 
         //this.c1 = new Card([-1, 1, 0], [-1, 1, 2], document.querySelector("#card1"), 0, 'url("/assets/bat.jpg")');//0 = red, 1 = blue
         //this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], document.querySelector("#card2"), 1, 'url("/assets/bison.jpg")');
@@ -47,33 +48,32 @@
         this.domElement;
     }
 
-    PopulatePawns() {
-        for (var i = 0; i < 5; i++) {
-            if (i != 2) {
-                this.player[i].piece = new Pawn(0, 0);
-                this.opponent[i].piece = new Pawn(1, 0);
-            } else {
+    //PopulatePawns() {
+    //    for (var i = 0; i < 5; i++) {
+    //        if (i != 2) {
+    //            this.player[i].piece = new Pawn(0, 0);
+    //            this.opponent[i].piece = new Pawn(1, 0);
+    //        } else {
 
-                this.player[i].piece = new Pawn(0, 1);
-                this.opponent[i].piece = new Pawn(1, 1);
-            }
-        }
-    }
+    //            this.player[i].piece = new Pawn(0, 1);
+    //            this.opponent[i].piece = new Pawn(1, 1);
+    //        }
+    //    }
+    //}
 
-    PopulateCards() {
-        this.c1.piece = new Card([-1, 1, 0], [-1, 1, 2],  0, 'url("/assets/bat.jpg")');// = new Card([-1, 1, 0], [-1, 1, 2], document.querySelector("#card1"), 0, 'url("/assets/bat.jpg")');//0 = red, 1 = blue
-        this.c2.piece = new Card([1, -1, -1, 1], [-2, -1, 1, 2],  1, 'url("/assets/bison.jpg")');
-        this.c3.piece = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/bear.jpg")');
-        this.c4.piece = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")');
-        this.c5.piece = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")');
+    //PopulateCards() {
+    //    this.c1.piece = new Card([-1, 1, 0], [-1, 1, 2],  0, 'url("/assets/bat.jpg")');// = new Card([-1, 1, 0], [-1, 1, 2], document.querySelector("#card1"), 0, 'url("/assets/bat.jpg")');//0 = red, 1 = blue
+    //    this.c2.piece = new Card([1, -1, -1, 1], [-2, -1, 1, 2],  1, 'url("/assets/bison.jpg")');
+    //    this.c3.piece = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/bear.jpg")');
+    //    this.c4.piece = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")');
+    //    this.c5.piece = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")');
 
-    }
+    //}
 
 
     Start() {
 
-        var p = new Pawn(document.querySelector("#card5"), connection, 5, 1, 1);
-        p.ShowSelf();
+
 
         //if it is players turn
         var cards = this.playerCard;
@@ -81,14 +81,17 @@
         var board = this.board;
         var activeItem = this.activeItem;
         var roomId = this.roomId;
+        var container = this.container;
+        var deck = this.playerDeck;
 
         for (var i = 0; i < 2; i++) {
-            var part = this.playerCard[i];
-            part.piece.SetContent(part.domElement);
-            part.container = "#" + this.playerDeck.id;
+            var playcard = this.playerCard[i];
+            playcard.SetContent(playcard.domElement);
+            playcard.container = "#" + this.playerDeck.id;
             //this.playerCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.selectedCard);}, false);
-            var opponent = this.opponentCard[i];
-            opponent.piece.SetContent(opponent.domElement);
+            var opcard = this.opponentCard[i];
+            opcard.SetContent(opcard.domElement);
+            opcard.container = "#" + this.opponentDeck.id;
             //this.opponentCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.opponentCard); }, false);
         }
 
@@ -104,14 +107,14 @@
             pawns.forEach(function (i) {
                 if (e.target == i.domElement) {
                     activeItem = i;
-                    activeItem.dragStart(e);
+                    activeItem.dragStart(e, container);
                 }
             });
         };
         function Drag(e) {
             if (e != null) {
                 if (activeItem != null) {
-                    activeItem.drag(e, roomId);
+                    activeItem.drag(e, roomId, container);
                 }
             }
         };
@@ -135,14 +138,14 @@
             cards.forEach(function (i) {
                 if (e.target == i.domElement) {
                     activeItem = i;
-                    activeItem.dragStart(e);
+                    activeItem.dragStart(e, deck);
                 }
             });
         };
         function CardDrag(e) {
             if (e != null) {
                 if (activeItem != null) {
-                    activeItem.drag(e, roomId);
+                    activeItem.drag(e, roomId, deck);
                 }
             }
         };
