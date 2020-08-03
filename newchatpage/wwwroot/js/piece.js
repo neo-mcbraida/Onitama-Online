@@ -10,6 +10,8 @@
         this.yIndexCur;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
         this.xIndexPrev;
         this.yIndexPrev;
+        this.xPrev;
+        this.yPrev;
         this.yOffset;
         this.xOffset;
         this.canMove = true; 
@@ -35,6 +37,8 @@
         if (this.canMove) {
             this.Move(roomId, true);
 
+            this.xPrev = parseInt(this.domElement.style.left, 10);
+            this.yPrev = parseInt(this.domElement.style.top, 10);
 
             e.preventDefault();
 
@@ -73,8 +77,8 @@
                 this.left = (e.touches[0].pageX - (this.xOffset + offset.left));
                 //mouse
             } else {
-                this.top = (e.pageY - (this.yOffset + offset.top));// - 50;
-                this.left = (e.pageX - (this.xOffset + offset.left));// - 50;
+                this.top = (e.pageY - (this.yOffset + offset.top));
+                this.left = (e.pageX - (this.xOffset + offset.left));
                 //this.currentX = e.clientX - this.initialX;
                 //this.currentY = e.clientY - this.initialY;
 
@@ -92,39 +96,7 @@
     }
 
 
-    dragEnd(e, board) {
-
-        //board is array of x/y coordinates
-        if (this.active && board !== null) {
-
-            //runs method that gets index of pawns closest x and y positions of the board
-            this.xIndexCur = this.GetClosest(board, this.left);
-            this.yIndexCur = this.GetClosest(board, this.top);
-
-            //sets current x and y to positions to coordinates of space on board that pawn is closest to
-            this.left = board[this.xIndexCur];
-            this.top = board[this.yIndexCur];
-
-
-            //if position of pawn has changed, then player has made a move, so;
-            if (this.xIndexCur != this.xIndexPrev || this.yIndexCur != this.yIndexPrev) {
-                this.xIndexPrev = this.xIndexCur;
-                this.yIndexPrev = this.yIndexCur;
-                //swap player turns
-                this.SwapMove(roomId);
-            }
-
-
-            //runs method that moves pawn to closest space on board
-            this.setTranslate(this.left, this.top, this.domElement);
-            //sends coordinate of new position
-            this.Move(roomId, false);
-            this.active = false;
-
-        }
-    }
-
-
+    
 
     GetClosest(positions, pos) {//find index of closest space on board 
         var closest;
@@ -141,7 +113,10 @@
             }
         })
         return index;
+
+
     }
+    
 
     Move(roomId, dStart) {
         //invokes method that sends information about pawn being moved to other client
@@ -165,6 +140,7 @@ class Pawn extends Piece {
         super(domElement, connection, id);
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
+        this.possiblePos = [];
         //this.id = id;
         //this.domElement = _item;
         //this.active = false;
@@ -178,13 +154,43 @@ class Pawn extends Piece {
         //this.canMove = true;
     }
 
-    ShowSelf() {
-        console.log(this);
+    dragEnd(e, board) {
+
+        //board is array of x/y coordinates
+        if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
+
+
+            this.xIndexCur = this.GetClosest(board, this.left);
+            this.yIndexCur = this.GetClosest(board, this.top);
+
+            //sets current x and y to positions to coordinates of space on board that pawn is closest to
+            this.left = board[this.xIndexCur];
+            this.top = board[this.yIndexCur];
+
+            
+
+            this.setTranslate(this.left, this.top, this.domElement);
+
+            //if position of pawn has changed, then player has made a move, so;
+            if (this.xIndexCur != this.xIndexPrev || this.yIndexCur != this.yIndexPrev) {
+                this.xIndexPrev = this.xIndexCur;
+                this.yIndexPrev = this.yIndexCur;
+                //swap player turns
+                this.SwapMove(roomId);
+            }
+
+            //runs method that moves pawn to closest space on board
+            //sends coordinate of new position
+            this.Move(roomId, false);
+            this.active = false;
+
+        }
     }
 
 }
 
 class Card extends Piece{
+    //this.deck = [100, 250, 400];
     constructor(xIndex, yIndex, colour, source, domElement, connection, id) {
         super(domElement, connection, id)
         this.xIndex = xIndex;
@@ -201,4 +207,54 @@ class Card extends Piece{
         console.log(active);
         active = this;
     }
+
+    dragEnd(cardSpace) {
+
+        if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
+
+            var deck = [100, 250, 400];//deck is array of y coordinates for card spaces
+            this.yIndexCur = this.GetClosest(deck, this.top);
+            
+
+            if (cardSpace === this.yIndexCur) {
+                //sets current x and y to positions to coordinates of space on board that pawn is closest to
+                this.top = deck[this.yIndexCur];
+
+            } else {
+                this.yIndexCur = this.GetClosest(deck, this.yPrev);
+                this.top = deck[this.yIndexCur]
+
+            }
+            this.left = 0;
+            
+            cardSpace = this.GetClosest(deck, this.yPrev);
+            this.yPrev = this.top;
+
+            this.setTranslate(this.left, this.top, this.domElement);
+
+            //if position of pawn has changed, then player has made a move, so;
+            if (this.yIndexCur != this.yIndexPrev) {
+                this.yIndexPrev = this.yIndexCur;
+
+            }
+
+
+            //runs method that moves pawn to closest space on board
+            //sends coordinate of new position
+            this.Move(roomId, false);
+            this.active = false;
+
+            return (cardSpace);
+
+        }
+
+    }
+
+
+    GetSpace() {
+
+        var cardSpace = this.GetClosest(deck, this.yPrev);
+        return (cardSpace);
+    }
+
 }

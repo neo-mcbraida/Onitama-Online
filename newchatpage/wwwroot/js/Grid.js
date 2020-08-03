@@ -5,6 +5,8 @@
         this.playerDeck;
         this.board = [0, 100, 200, 300, 400];
 
+        this.cardSpace = 0;
+
         this.roomId = roomId;
         this.connection = connection;
         this.canMove = true;
@@ -51,6 +53,8 @@
         this.pIndex1 = 0;
         this.pIndex2 = 0;
         this.domElement;
+
+        this.activeItem;
     }
 
     //PopulatePawns() {
@@ -88,6 +92,8 @@
         var roomId = this.roomId;
         var container = this.container;
         var deck = this.playerDeck;
+        var cardSpace = 0;
+        //var cardSpace = this.cardSpace;
         
 
         this.pieces.push(this.opponentCard);//push cards 1st as it is the shorter array
@@ -158,15 +164,12 @@
                 }
             }
         };
-        function CardEnd(e) {
+        function CardEnd() {
             if (activeItem != null) {
-                activeItem.dragEnd(e, null);
+                cardSpace = activeItem.dragEnd(cardSpace);
                 activeItem = null;
             }
         };
-
-
-
         //for mouse
         this.playerDeck.addEventListener("mousedown", CardStart, false);
         this.playerDeck.addEventListener("mouseup", CardEnd, false);
@@ -178,6 +181,13 @@
 
 
     }
+
+    
+   
+
+    //func(h) {
+    //    console.log(h);
+    //}
 
     SetActive(piece) {
         var pieces = this.pieces;
