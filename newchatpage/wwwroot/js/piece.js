@@ -219,17 +219,15 @@ class Card extends Piece{
             if (cardSpace === this.yIndexCur) {
                 //sets current x and y to positions to coordinates of space on board that pawn is closest to
                 this.top = deck[this.yIndexCur];
+                cardSpace = this.GetClosest(deck, this.yPrev);
+                this.yPrev = this.top;
 
             } else {
                 this.yIndexCur = this.GetClosest(deck, this.yPrev);
-                this.top = deck[this.yIndexCur]
+                this.top = this.yPrev
 
             }
             this.left = 0;
-            
-            cardSpace = this.GetClosest(deck, this.yPrev);
-            this.yPrev = this.top;
-
             this.setTranslate(this.left, this.top, this.domElement);
 
             //if position of pawn has changed, then player has made a move, so;
