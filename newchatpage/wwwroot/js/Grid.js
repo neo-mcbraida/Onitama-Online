@@ -93,6 +93,8 @@
         var container = this.container;
         var deck = this.playerDeck;
         var cardSpace = 0;
+        var yIndex = [];
+        var xIndex = [];
         //var cardSpace = this.cardSpace;
         
 
@@ -122,7 +124,7 @@
             pawns.forEach(function (i) {
                 if (e.target == i.domElement) {
                     activeItem = i;
-                    activeItem.dragStart(e, container);
+                    activeItem.dragStart(e, container, xIndex, yIndex);
                 }
             });
         };
@@ -157,6 +159,7 @@
                 }
             });
         };
+
         function CardDrag(e) {
             if (e != null) {
                 if (activeItem != null) {
@@ -164,12 +167,20 @@
                 }
             }
         };
+
         function CardEnd() {
             if (activeItem != null) {
                 cardSpace = activeItem.dragEnd(cardSpace);
+                if (activeItem.yIndexCur === 0) {
+                    var vector = activeItem.GetVector();
+                    xIndex = vector[0];
+                    yIndex = vector[1];
+
+                }
                 activeItem = null;
             }
         };
+
         //for mouse
         this.playerDeck.addEventListener("mousedown", CardStart, false);
         this.playerDeck.addEventListener("mouseup", CardEnd, false);

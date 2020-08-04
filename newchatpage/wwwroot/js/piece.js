@@ -33,8 +33,17 @@
     }
 
 
-    dragStart(e, container) {
+    dragStart(e, container, xIndex, yIndex) {
         if (this.canMove) {
+
+            if (xIndex != null && yIndex != null) {
+                this.xIndex = xIndex;
+                this.yIndex = yIndex;
+                this.highlightPos();
+                console.log(xIndex);
+                console.log(yIndex);
+
+            }
             this.Move(roomId, true);
 
             this.xPrev = parseInt(this.domElement.style.left, 10);
@@ -141,6 +150,8 @@ class Pawn extends Piece {
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
         this.possiblePos = [];
+        this.xIndex;
+        this.yIndex;
         //this.id = id;
         //this.domElement = _item;
         //this.active = false;
@@ -152,6 +163,30 @@ class Pawn extends Piece {
         //this.xIndexPrev;
         //this.yIndexPrev;
         //this.canMove = true;
+    }
+
+    highlightPos() {
+        var grid = [0, 100, 200, 300, 400];
+        for (var i = 0; i < this.xIndex.length; i++) {
+
+            var div = document.createElement('div');
+            var xIn = this.xIndexPrev + this.xIndex[i];
+            var yIn = this.yIndexPrev + this.yIndex[i]
+            if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {// if index is out of range of positions on board
+                document.querySelector(this.container).appendChild(div);
+                div.style.left = grid[xIn].toString() + "px";
+                div.style.top = grid[yIn].toString() + "px";
+                div.className = 'placeHolder';
+                this.possiblePos.push(div);
+            }
+        }
+    }
+
+    RemoveHighlight() {
+        var container = document.querySelector(this.container);//more efficient as it does not have to redefine container for each pos
+        this.possiblePos.forEach(function (i) {
+            container.removeChild(i);
+        });
     }
 
     dragEnd(e, board) {
@@ -179,6 +214,7 @@ class Pawn extends Piece {
                 this.SwapMove(roomId);
             }
 
+            this.RemoveHighlight();
             //runs method that moves pawn to closest space on board
             //sends coordinate of new position
             this.Move(roomId, false);
@@ -248,11 +284,7 @@ class Card extends Piece{
 
     }
 
-
-    GetSpace() {
-
-        var cardSpace = this.GetClosest(deck, this.yPrev);
-        return (cardSpace);
+    GetVector() {
+        return ([this.xIndex, this.yIndex]);
     }
-
 }
