@@ -114,7 +114,7 @@
 
 
         //this.centreCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.centreCard); }, false);
-
+        var p = this.player
         for (var i = 0; i < 5; i++) {
             pawns[i].SetCoordinate(board);
             this.opponent[i].SetCoordinate(board);
@@ -124,7 +124,7 @@
             pawns.forEach(function (i) {
                 if (e.target == i.domElement) {
                     activeItem = i;
-                    activeItem.dragStart(e, container, xIndex, yIndex);
+                    activeItem.dragStart(e, container, xIndex, yIndex, p);
                 }
             });
         };
@@ -172,9 +172,9 @@
             if (activeItem != null) {
                 cardSpace = activeItem.dragEnd(cardSpace);
                 if (activeItem.yIndexCur === 0) {
-                    var vector = activeItem.GetVector();
-                    xIndex = vector[0];
-                    yIndex = vector[1];
+                    
+                    xIndex = activeItem.xIndex;
+                    yIndex = activeItem.yIndex;
 
                 }
                 activeItem = null;

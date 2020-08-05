@@ -24,6 +24,8 @@
         this.left = parseInt(this.domElement.style.left, 10);
         this.yIndexPrev = this.GetClosest(board, this.top);
         this.xIndexPrev = this.GetClosest(board, this.left);
+        this.yIndexCur = this.yIndexPrev;
+        this.xIndexCur = this.xIndexPrev;
     }
 
     setTranslate(xPos, yPos) {
@@ -33,13 +35,13 @@
     }
 
 
-    dragStart(e, container, xIndex, yIndex) {
+    dragStart(e, container, xIndex, yIndex, players) {
         if (this.canMove) {
 
             if (xIndex != null && yIndex != null) {
                 this.xIndex = xIndex;
                 this.yIndex = yIndex;
-                this.highlightPos();
+                this.highlightPos(players);
                 console.log(xIndex);
                 console.log(yIndex);
 
@@ -150,6 +152,8 @@ class Pawn extends Piece {
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
         this.possiblePos = [];
+        //this.possibleX = [];
+        //this.possibleY = [];
         this.xIndex;
         this.yIndex;
         //this.id = id;
@@ -165,28 +169,52 @@ class Pawn extends Piece {
         //this.canMove = true;
     }
 
-    highlightPos() {
+    highlightPos(players) {
         var grid = [0, 100, 200, 300, 400];
         for (var i = 0; i < this.xIndex.length; i++) {
 
-            var div = document.createElement('div');
             var xIn = this.xIndexPrev + this.xIndex[i];
             var yIn = this.yIndexPrev + this.yIndex[i]
-            if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {// if index is out of range of positions on board
+            if (this.PosFree(players, xIn, yIn)) {// if index is out of range of positions on board
+                var div = document.createElement('div');
                 document.querySelector(this.container).appendChild(div);
                 div.style.left = grid[xIn].toString() + "px";
                 div.style.top = grid[yIn].toString() + "px";
                 div.className = 'placeHolder';
-                this.possiblePos.push(div);
+                var pos = new Position(div, xIn, yIn);
+                this.possiblePos.push(pos);
             }
         }
+    }
+
+    PosFree(players, xIn, yIn) {
+        if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {
+            for (var i = 0; i < players.length; i++) {// foreach pos iterate through player, not for each player iterate throgh each pos.
+                if (players[i].xIndexCur !== xIn && players[i].yIndex !== yIn) {
+                    return true;
+                } else { return false;}
+            }
+
+        } else { return false;}
     }
 
     RemoveHighlight() {
         var container = document.querySelector(this.container);//more efficient as it does not have to redefine container for each pos
         this.possiblePos.forEach(function (i) {
-            container.removeChild(i);
+            container.removeChild(i.domElement);
         });
+        this.possiblePos = [];
+    }
+
+    CanMove() {
+        var possible = false
+        for (var i = 0; i < this.possiblePos.length; i++) {
+            if (this.possiblePos[i].xIndex === this.xIndexCur && this.possiblePos[i].yIndex === this.yIndexCur) {
+                possible = true;
+                break;
+            }
+        }
+        return possible;
     }
 
     dragEnd(e, board) {
@@ -198,21 +226,26 @@ class Pawn extends Piece {
             this.xIndexCur = this.GetClosest(board, this.left);
             this.yIndexCur = this.GetClosest(board, this.top);
 
-            //sets current x and y to positions to coordinates of space on board that pawn is closest to
-            this.left = board[this.xIndexCur];
-            this.top = board[this.yIndexCur];
-
             
 
-            this.setTranslate(this.left, this.top, this.domElement);
-
             //if position of pawn has changed, then player has made a move, so;
-            if (this.xIndexCur != this.xIndexPrev || this.yIndexCur != this.yIndexPrev) {
+            if (this.CanMove()/*this.xIndexCur != this.xIndexPrev || this.yIndexCur != this.yIndexPrev*/) {
                 this.xIndexPrev = this.xIndexCur;
                 this.yIndexPrev = this.yIndexCur;
                 //swap player turns
                 this.SwapMove(roomId);
+            } else {
+                this.xIndexCur = this.xIndexPrev;
+                this.yIndexCur = this.yIndexPrev;
             }
+
+            //sets current x and y to positions to coordinates of space on board that pawn is closest to
+            this.left = board[this.xIndexCur];
+            this.top = board[this.yIndexCur];
+
+
+
+            this.setTranslate(this.left, this.top, this.domElement);
 
             this.RemoveHighlight();
             //runs method that moves pawn to closest space on board
@@ -284,7 +317,4 @@ class Card extends Piece{
 
     }
 
-    GetVector() {
-        return ([this.xIndex, this.yIndex]);
-    }
 }
