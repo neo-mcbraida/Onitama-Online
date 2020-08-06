@@ -31,6 +31,7 @@
             var pHolder = this.board.player;
             this.board.player = this.board.opponent;
             this.board.opponent = pHolder;
+            this.board.playerTurn = false;    
             this.SwapTurn(null);
             this.board.playerCard.forEach(function (i) {//times by -1 all the possible positions for a card
                 for (var u = 0; u < i.xIndex.length; u++) {
@@ -65,6 +66,8 @@
         u.forEach(function (i) {
             i.canMove = canMove;
         });
+
+        this.board.SwapTurn();
     }
     
 
