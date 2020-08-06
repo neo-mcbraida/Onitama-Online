@@ -37,7 +37,7 @@
         this.centreCard = this.c3;
 
         this.selectedCard = new Card();
-        
+
         this.playerCard = [this.c1, this.c2];
         this.opponentCard = [this.c4, this.c5];
 
@@ -55,29 +55,8 @@
         this.domElement;
 
         this.activeItem;
+
     }
-
-    //PopulatePawns() {
-    //    for (var i = 0; i < 5; i++) {
-    //        if (i != 2) {
-    //            this.player[i].piece = new Pawn(0, 0);
-    //            this.opponent[i].piece = new Pawn(1, 0);
-    //        } else {
-
-    //            this.player[i].piece = new Pawn(0, 1);
-    //            this.opponent[i].piece = new Pawn(1, 1);
-    //        }
-    //    }
-    //}
-
-    //PopulateCards() {
-    //    this.c1.piece = new Card([-1, 1, 0], [-1, 1, 2],  0, 'url("/assets/bat.jpg")');// = new Card([-1, 1, 0], [-1, 1, 2], document.querySelector("#card1"), 0, 'url("/assets/bat.jpg")');//0 = red, 1 = blue
-    //    this.c2.piece = new Card([1, -1, -1, 1], [-2, -1, 1, 2],  1, 'url("/assets/bison.jpg")');
-    //    this.c3.piece = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/bear.jpg")');
-    //    this.c4.piece = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")');
-    //    this.c5.piece = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")');
-
-    //}
 
 
     Start() {
@@ -86,6 +65,7 @@
 
         //if it is players turn
         var cards = this.playerCard;
+        var opponent = this.opponent;
         var pawns = this.player;
         var board = this.board;
         var activeItem = this.activeItem;
@@ -95,8 +75,15 @@
         var cardSpace = 0;
         var yIndex = [];
         var xIndex = [];
-        //var cardSpace = this.cardSpace;
-        
+
+        this.dragStart = this.DragStart;//storing specific instances of methods, 
+        this.drag = this.Drag;//so that i can add and remove eventListeners
+        this.dragEnd = this.DragEnd;
+
+        this.cardStart = this.CardStart;
+        this.cardDrag = this.CardDrag;
+        this.cardEnd = this.CardEnd;
+
 
         this.pieces.push(this.opponentCard);//push cards 1st as it is the shorter array
         this.pieces.push(this.opponent);
@@ -120,85 +107,190 @@
             this.opponent[i].SetCoordinate(board);
         }
 
-        function DragStart(e) {
-            pawns.forEach(function (i) {
-                if (e.target == i.domElement) {
-                    activeItem = i;
-                    activeItem.dragStart(e, container, xIndex, yIndex, p);
-                }
-            });
-        };
-        function Drag(e) {
-            if (e != null) {
-                if (activeItem != null) {
-                    activeItem.drag(e, roomId, container);
-                }
-            }
-        };
-        function DragEnd(e) {
-            if (activeItem != null) {
-                activeItem.dragEnd(e, board);
-                activeItem = null;
-            }
-        };
-
-        //for mouse
-        this.container.addEventListener("mousedown", DragStart, false);
-        this.container.addEventListener("mouseup", DragEnd, false);
-        this.container.addEventListener("mousemove", Drag, false);
-        //for touchscreen
-        this.container.addEventListener("touchstart", DragStart, false);
-        this.container.addEventListener("touchend", DragEnd, false);
-        this.container.addEventListener("touchmove", Drag, false);
-
-        function CardStart(e) {
-            cards.forEach(function (i) {
-                if (e.target == i.domElement) {
-                    activeItem = i;
-                    activeItem.dragStart(e, deck);
-                }
-            });
-        };
-
-        function CardDrag(e) {
-            if (e != null) {
-                if (activeItem != null) {
-                    activeItem.drag(e, roomId, deck);
-                }
-            }
-        };
-
-        function CardEnd() {
-            if (activeItem != null) {
-                cardSpace = activeItem.dragEnd(cardSpace);
-                if (activeItem.yIndexCur === 0) {
-                    
-                    xIndex = activeItem.xIndex;
-                    yIndex = activeItem.yIndex;
-
-                }
-                activeItem = null;
-            }
-        };
-
-        //for mouse
-        this.playerDeck.addEventListener("mousedown", CardStart, false);
-        this.playerDeck.addEventListener("mouseup", CardEnd, false);
-        this.playerDeck.addEventListener("mousemove", CardDrag, false);
-        //for touchscreen
-        this.playerDeck.addEventListener("touchstart", CardStart, false);
-        this.playerDeck.addEventListener("touchend", CardEnd, false);
-        this.playerDeck.addEventListener("touchmove", CardDrag, false);
 
 
+        //function DragStart(e) {
+        //    pawns.forEach(function (i) {
+        //        if (e.target == i.domElement) {
+        //            activeItem = i;
+        //            activeItem.dragStart(e, container, xIndex, yIndex, p);
+        //        }
+        //    });
+        //};
+        //function Drag(e) {
+        //    if (e != null) {
+        //        if (activeItem != null) {
+        //            activeItem.drag(e, roomId, container);
+        //        }
+        //    }
+        //};
+        //function DragEnd(e) {
+        //    if (activeItem != null) {
+        //        activeItem.dragEnd(e, board, opponent);
+        //        activeItem = null;
+        //    }
+        //};
+
+        ////for mouse
+        //this.container.addEventListener("mousedown", DragStart, false);
+        //this.container.addEventListener("mouseup", DragEnd, false);
+        //this.container.addEventListener("mousemove", Drag, false);
+        ////for touchscreen
+        //this.container.addEventListener("touchstart", DragStart, false);
+        //this.container.addEventListener("touchend", DragEnd, false);
+        //this.container.addEventListener("touchmove", Drag, false);
+
+        //function CardStart(e) {
+        //    cards.forEach(function (i) {
+        //        if (e.target == i.domElement) {
+        //            activeItem = i;
+        //            activeItem.dragStart(e, deck);
+        //        }
+        //    });
+        //};
+
+        //function CardDrag(e) {
+        //    if (e != null) {
+        //        if (activeItem != null) {
+        //            activeItem.drag(e, roomId, deck);
+        //        }
+        //    }
+        //};
+
+        //function CardEnd() {
+        //    if (activeItem != null) {
+        //        cardSpace = activeItem.dragEnd(cardSpace);
+        //        if (activeItem.yIndexCur === 0) {
+
+        //            xIndex = activeItem.xIndex;
+        //            yIndex = activeItem.yIndex;
+
+        //        }
+        //        activeItem = null;
+        //    }
+        ////};
+        //this.container.addEventListener("mousedown", this.test, false);
+        ////for mouse
+        //this.playerDeck.addEventListener("mousedown", CardStart, false);
+        //this.playerDeck.addEventListener("mouseup", CardEnd, false);
+        //this.playerDeck.addEventListener("mousemove", CardDrag, false);
+        ////for touchscreen
+        //this.playerDeck.addEventListener("touchstart", CardStart, false);
+        //this.playerDeck.addEventListener("touchend", CardEnd, false);
+        //this.playerDeck.addEventListener("touchmove", CardDrag, false);
+       
+        
     }
 
-    
-   
+    AddGameListener(Start, Drag, End, container) {
+        //for mouse
+        container.addEventListener("mousedown", Sart, false);
+        container.addEventListener("mouseup", End, false);
+        container.addEventListener("mousemove", Drag, false);
+        //for touchscreen
+        container.addEventListener("touchstart", Start, false);
+        container.addEventListener("touchend", End, false);
+        container.addEventListener("touchmove", Drag, false);
+    }
 
-    //func(h) {
-    //    console.log(h);
-    //}
+    RemoveGameListeners(Start, Drag, End, container) {
+        //for mouse
+        container.removeEventListener("mousedown", Sart, false);
+        container.removeEventListener("mouseup", End, false);
+        container.removeEventListener("mousemove", Drag, false);
+        //for touchscreen
+        container.removeEventListener("touchstart", Start, false);
+        container.removeEventListener("touchend", End, false);
+        container.removeEventListener("touchmove", Drag, false);
+       
+    }
+
+    AddCardListener
+
+    CardStart(e) {
+        cards.forEach(function (i) {
+            if (e.target == i.domElement) {
+                activeItem = i;
+                activeItem.dragStart(e, deck);
+            }
+        });
+    }
+
+    CardDrag(e) {
+        if (e != null) {
+            if (activeItem != null) {
+                activeItem.drag(e, roomId, deck);
+            }
+        }
+    }
+
+    CardEnd() {
+        if (activeItem != null) {
+            cardSpace = activeItem.dragEnd(cardSpace);
+            if (activeItem.yIndexCur === 0) {
+
+                xIndex = activeItem.xIndex;
+                yIndex = activeItem.yIndex;
+
+            }
+            activeItem = null;
+        }
+    }
+
+    DragStart(e) {
+    pawns.forEach(function (i) {
+        if (e.target == i.domElement) {
+            activeItem = i;
+            activeItem.dragStart(e, container, xIndex, yIndex, p);
+        }
+    });
+    }
+
+    Drag(e) {
+        if (e != null) {
+            if (activeItem != null) {
+                activeItem.drag(e, roomId, container);
+            }
+        }
+    }
+
+    DragEnd(e) {
+        if (activeItem != null) {
+            activeItem.dragEnd(e, board, opponent);
+            activeItem = null;
+        }
+    }
+
+    ListRemove(list, item) {
+        var pHolder = [];
+        list.forEach(function (i) {
+            if (i !== item) {
+                pHolder.push(i);
+            }
+        });
+        return pHolder;
+    }
+
+    RemovePawn(pawnId) {
+        //var opponent = this.opponent
+        
+        for (var i = 0; i < this.player.length; i++) {
+            if (this.player[i].id === pawnId) {
+                this.container.removeChild(this.player[i].domElement);
+                var removed = this.player[i];
+                removed = null;
+                this.player = this.ListRemove(this.player, this.player[i]);
+                break;
+            } else if (this.opponent[i].id === pawnId) {
+                this.container.removeChild(this.opponent[i].domElement);
+                var removed = this.opponent[i];
+                removed = null;
+                this.opponent = this.ListRemove(this.opponent, this.opponent[i]);
+                break;
+            }
+        }
+    }
+
 
     SetActive(piece) {
         var pieces = this.pieces;

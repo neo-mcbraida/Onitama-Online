@@ -59,10 +59,11 @@ namespace newchatpage.Hubs
             await Clients.Group(roomId).SendAsync("StartGame");
         }
 
-        public async Task SwapMove(string roomId)
+        public async Task SwapMove(string roomId, int? pawnId)
         {
             //runs method for all cleints in room that swaps the players turn
-            await Clients.Group(roomId).SendAsync("SwapMove");
+            
+            await Clients.Group(roomId).SendAsync("SwapMove", pawnId);
         }
     }
 }

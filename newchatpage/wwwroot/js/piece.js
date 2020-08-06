@@ -134,9 +134,10 @@
         this.connection.invoke("Move", this, roomId, dStart);
     }
 
-    SwapMove(roomId) {
+    SwapMove(roomId, pawnId) {
         //invokes method  that swaps player turn between players
-        this.connection.invoke("SwapMove", roomId);
+        
+        this.connection.invoke("SwapMove", roomId, pawnId);
     }
 
     SetActive(domElement, id) {
@@ -152,21 +153,8 @@ class Pawn extends Piece {
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
         this.possiblePos = [];
-        //this.possibleX = [];
-        //this.possibleY = [];
         this.xIndex;
         this.yIndex;
-        //this.id = id;
-        //this.domElement = _item;
-        //this.active = false;
-        //this.connection = connection;
-        //this.top;
-        //this.left;
-        //this.xIndexCur;//store index instead of coordinate
-        //this.yIndexCur;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
-        //this.xIndexPrev;
-        //this.yIndexPrev;
-        //this.canMove = true;
     }
 
     highlightPos(players) {
@@ -174,8 +162,8 @@ class Pawn extends Piece {
         for (var i = 0; i < this.xIndex.length; i++) {
 
             var xIn = this.xIndexPrev + this.xIndex[i];
-            var yIn = this.yIndexPrev + this.yIndex[i]
-            if (this.PosFree(players, xIn, yIn)) {// if index is out of range of positions on board
+            var yIn = this.yIndexPrev + this.yIndex[i];
+            if (this.PosFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
                 var div = document.createElement('div');
                 document.querySelector(this.container).appendChild(div);
                 div.style.left = grid[xIn].toString() + "px";
@@ -187,16 +175,26 @@ class Pawn extends Piece {
         }
     }
 
-    PosFree(players, xIn, yIn) {
+    PosFree(pawns, xIn, yIn) {
+        var free = true;
+        var pawnId;
         if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {
-            for (var i = 0; i < players.length; i++) {// foreach pos iterate through player, not for each player iterate throgh each pos.
-                if (players[i].xIndexCur !== xIn && players[i].yIndex !== yIn) {
-                    return true;
-                } else { return false;}
+            for (var i = 0; i < pawns.length; i++) {// foreach pos iterate through player, not for each player iterate throgh each pos.
+                if (pawns[i].xIndexCur === xIn && pawns[i].yIndexCur === yIn) {
+                    free = false
+                    pawnId = pawns[i].id;
+                    break;
+                }
+
             }
 
-        } else { return false;}
+        } else { free = false;}
+        if (free) { return null; } else { return pawnId;}
+
     }
+
+
+
 
     RemoveHighlight() {
         var container = document.querySelector(this.container);//more efficient as it does not have to redefine container for each pos
@@ -217,23 +215,22 @@ class Pawn extends Piece {
         return possible;
     }
 
-    dragEnd(e, board) {
+    dragEnd(e, board, opponent) {
 
         //board is array of x/y coordinates
         if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
 
-
             this.xIndexCur = this.GetClosest(board, this.left);
             this.yIndexCur = this.GetClosest(board, this.top);
 
-            
-
             //if position of pawn has changed, then player has made a move, so;
-            if (this.CanMove()/*this.xIndexCur != this.xIndexPrev || this.yIndexCur != this.yIndexPrev*/) {
+            if (this.CanMove()) {
                 this.xIndexPrev = this.xIndexCur;
                 this.yIndexPrev = this.yIndexCur;
+                var takePiece = false;
+                var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
-                this.SwapMove(roomId);
+                this.SwapMove(roomId, pawnId);
             } else {
                 this.xIndexCur = this.xIndexPrev;
                 this.yIndexCur = this.yIndexPrev;

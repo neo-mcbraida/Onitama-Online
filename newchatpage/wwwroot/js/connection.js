@@ -35,7 +35,6 @@ connection.on("RecieveGameInfo", function (_players, _userId) {
 });
 
 
-
 connection.on("StartGame", function () {
     //runs start method in game
     game.start();
@@ -52,9 +51,9 @@ connection.on("Move", function (pawn, dStart) {
 });
 
 
-connection.on("SwapMove", function () {
+connection.on("SwapMove", function (pawnId) {
     //runs game method swaps move of players
-    game.SwapTurn();
+    game.SwapTurn(pawnId);
 });
 
 connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client

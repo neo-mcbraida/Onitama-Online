@@ -9,11 +9,15 @@
         this.roomId = roomId;
         this.players = [userId];
         this.connection = connection;
+        this.cont = container;
+    }
+
+    Test2() {
+        console.log(this.board);
     }
 
     start() {
         //runs Move method in board, if player was first to join
-
         var _players = this.players;
         var _userId = this.userId;
        // this.board.PopulatePawns();
@@ -27,7 +31,7 @@
             var pHolder = this.board.player;
             this.board.player = this.board.opponent;
             this.board.opponent = pHolder;
-            this.SwapTurn();
+            this.SwapTurn(null);
             this.board.playerCard.forEach(function (i) {//times by -1 all the possible positions for a card
                 for (var u = 0; u < i.xIndex.length; u++) {
                     i.xIndex[u] = i.xIndex[u] * -1;
@@ -46,12 +50,16 @@
     }  
 
 
-    SwapTurn() {
+    SwapTurn(pawnId) {
         //swaps canMove around and then runs Move method in board
         //with new canMove value
         var canMove = !this.canMove;
         this.canMove = canMove;
         this.board.canMove = canMove;
+        if (pawnId !== null) {
+            this.board.RemovePawn(pawnId);
+            
+        }
 
         var u = this.board.player;
         u.forEach(function (i) {
