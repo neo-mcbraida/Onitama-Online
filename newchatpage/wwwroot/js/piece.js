@@ -26,6 +26,7 @@
         this.xIndexPrev = this.GetClosest(board, this.left);
         this.yIndexCur = this.yIndexPrev;
         this.xIndexCur = this.xIndexPrev;
+        console.log(this.xIndexCur, this.yIndexCur);
     }
 
     setTranslate(xPos, yPos) {
@@ -134,10 +135,10 @@
         this.connection.invoke("Move", this, roomId, dStart);
     }
 
-    SwapMove(roomId, pawnId) {
+    SwapMove(roomId, pawnId, cardId) {
         //invokes method  that swaps player turn between players
         
-        this.connection.invoke("SwapMove", roomId, pawnId);
+        this.connection.invoke("SwapMove", roomId, pawnId, cardId);
     }
 
     SetActive(domElement, id) {
@@ -215,7 +216,7 @@ class Pawn extends Piece {
         return possible;
     }
 
-    dragEnd(e, board, opponent) {
+    dragEnd(board, opponent, cardId) {
 
         //board is array of x/y coordinates
         if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
@@ -230,7 +231,7 @@ class Pawn extends Piece {
                 var takePiece = false;
                 var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
-                this.SwapMove(roomId, pawnId);
+                this.SwapMove(roomId, pawnId, cardId);
             } else {
                 this.xIndexCur = this.xIndexPrev;
                 this.yIndexCur = this.yIndexPrev;
@@ -265,9 +266,25 @@ class Card extends Piece{
         this.source = source;
     }
 
-    SetContent(domElement) {
-        domElement.style.content = this.source;
+    RotateCard() {
+        for (var i = 0; i < this.xIndex.length; i++) {
+            this.xIndex[i] = this.xIndex[i] * -1;
+            this.yIndex[i] = this.yIndex[i] * -1;
+        }
     }
+
+    SetContent() {
+        this.domElement.style.content = this.source;
+    }
+
+    //SetCard(card) {
+    //    var domE = this.domElement;
+    //   // this.con = card.objects;
+    //    this.domElement = domE;
+        
+    //    this.SetContent();
+
+    //}
 
     SetActive(active) {
         console.log(active);
@@ -276,42 +293,44 @@ class Card extends Piece{
 
     dragEnd(cardSpace) {
 
-        if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
+        ///if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
 
             var deck = [100, 250, 400];//deck is array of y coordinates for card spaces
-            this.yIndexCur = this.GetClosest(deck, this.top);
+            //this.yIndexCur = this.GetClosest(deck, this.top);
             
 
-            if (cardSpace === this.yIndexCur) {
-                //sets current x and y to positions to coordinates of space on board that pawn is closest to
-                this.top = deck[this.yIndexCur];
-                cardSpace = this.GetClosest(deck, this.yPrev);
-                this.yPrev = this.top;
+            //if (cardSpace === this.yIndexCur) {
+            //    //sets current x and y to positions to coordinates of space on board that pawn is closest to
+            //    this.top = deck[this.yIndexCur];
+            //    cardSpace = this.GetClosest(deck, this.yPrev);
+            //    this.yPrev = this.top;
 
-            } else {
-                this.yIndexCur = this.GetClosest(deck, this.yPrev);
-                this.top = this.yPrev
+            //} else {
+            //    this.yIndexCur = this.GetClosest(deck, this.yPrev);
+            //    this.top = this.yPrev
 
-            }
-            this.left = 0;
-            this.setTranslate(this.left, this.top, this.domElement);
+            //}
+           // this.left = 0;
+          //  this.setTranslate(this.left, this.top, this.domElement);
 
             //if position of pawn has changed, then player has made a move, so;
-            if (this.yIndexCur != this.yIndexPrev) {
-                this.yIndexPrev = this.yIndexCur;
+            //if (this.yIndexCur != this.yIndexPrev) {
+            //    this.yIndexPrev = this.yIndexCur;
 
-            }
+            //}
 
 
             //runs method that moves pawn to closest space on board
             //sends coordinate of new position
             this.Move(roomId, false);
-            this.active = false;
+            //this.active = false;
 
-            return (cardSpace);
+            //return (cardSpace);
 
-        }
+        //}
 
     }
+
+
 
 }

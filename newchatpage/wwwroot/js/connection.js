@@ -51,9 +51,9 @@ connection.on("Move", function (pawn, dStart) {
 });
 
 
-connection.on("SwapMove", function (pawnId) {
+connection.on("SwapMove", function (pawnId, cardId) {
     //runs game method swaps move of players
-    game.SwapTurn(pawnId);
+    game.SwapTurn(pawnId, cardId);
 });
 
 connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client

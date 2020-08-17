@@ -15,12 +15,13 @@
         this.p3 = new Pawn(document.querySelector("#item3"), connection, 3, 0, 1);
         this.p4 = new Pawn(document.querySelector("#item4"), connection, 4, 0, 0);
         this.p5 = new Pawn(document.querySelector("#item5"), connection, 5, 0, 0);
-
+        
         this.p6 = new Pawn(document.querySelector("#item6"), connection, 6, 1, 0);
         this.p7 = new Pawn(document.querySelector("#item7"), connection, 7, 1, 0);
         this.p8 = new Pawn(document.querySelector("#item8"), connection, 8, 1, 1);
         this.p9 = new Pawn(document.querySelector("#item9"), connection, 9, 1, 0);
         this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
+
 
         this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/bat.jpg")', document.querySelector("#card1"), connection, 11);
         this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/bison.jpg")', document.querySelector("#card2"), connection, 12);
@@ -28,19 +29,15 @@
         this.c4 = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")', document.querySelector("#card4"), connection, 14);
         this.c5 = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")', document.querySelector("#card5"), connection, 15);
 
-        //this.c1 = new Card([-1, 1, 0], [-1, 1, 2], document.querySelector("#card1"), 0, 'url("/assets/bat.jpg")');//0 = red, 1 = blue
-        //this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], document.querySelector("#card2"), 1, 'url("/assets/bison.jpg")');
-        //this.c3 = new Card([-1, 1, 0], [0, 0, 1], document.querySelector("#card3"), 0, 'url("/assets/bear.jpg")');
-        //this.c4 = new Card([0, 1, 0], [-2, 0, 2], document.querySelector("#card4"), 1, 'url("/assets/crawler.jpg")');
-        //this.c5 = new Card([0, 1, 0], [-1, 0, 1], document.querySelector("#card5"), 1, 'url("/assets/cow.jpg")');
-
 
         this.centreCard = this.c3;
 
-        this.selectedCard = new Card();
+        this.selectedCardId = new Card();
 
-        this.playerCard = [this.c1, this.c2];
+        this.playerCards = [this.c1, this.c2];
         this.opponentCard = [this.c4, this.c5];
+
+        this.cards = [this.playerCards, this.opponentCard];
 
         this.playerTurn = true;
 
@@ -71,26 +68,18 @@
         this.pieces.push(this.opponent);
 
         for (var i = 0; i < 2; i++) {
-            var playcard = this.playerCard[i];
-            playcard.SetContent(playcard.domElement);
+            var playcard = this.playerCards[i];
+            playcard.SetContent();
             playcard.container = "#" + this.playerDeck.id;
-            //this.playerCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.selectedCard);}, false);
             var opcard = this.opponentCard[i];
-            opcard.SetContent(opcard.domElement);
+            opcard.SetContent();
             opcard.container = "#" + this.opponentDeck.id;
-            //this.opponentCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.opponentCard); }, false);
         }
-
-
-        //this.centreCard[i].addEventListener("click", function (e) { this.playerCard[i].SetActive(this.centreCard); }, false);
-        
+        this.centreCard.SetContent();
         for (var i = 0; i < 5; i++) {
             this.player[i].SetCoordinate(this.board);
             this.opponent[i].SetCoordinate(this.board);
         }
-
-      
-
 
         if (this.playerTurn === true) {
             this.StartMove();
@@ -99,8 +88,8 @@
     }
 
     SwapTurn() {
-        this.playerTurn = !this.playerTurn;
-        if (this.playerTurn === true) {
+
+        if (this.canMove) {
             this.StartMove();
         } else {
             this.EndMove();
@@ -109,7 +98,9 @@
 
     StartMove() {
 
-        var cards = this.playerCard;
+
+        var selectedCardId = this.selectedCardId;
+        var cards = this.playerCards;
         var opponent = this.opponent;
         var player = this.player;
         var board = this.board;
@@ -140,7 +131,7 @@
         };
         this.DragEnd = function (e) {
             if (activeItem != null) {
-                activeItem.dragEnd(e, board, opponent);
+                activeItem.dragEnd(board, opponent, selectedCardId);
                 activeItem = null;
             }
         };
@@ -154,44 +145,23 @@
         this.container.addEventListener("touchend", this.DragEnd, false);
         this.container.addEventListener("touchmove", this.Drag, false);
 
+        this.CardSelect = function (e) {
 
-        this.CardStart = function(e) {
+            console.log(cards);
             cards.forEach(function (i) {
+
                 if (e.target == i.domElement) {
-                    activeItem = i;
-                    activeItem.dragStart(e, deck);
+                    selectedCardId = i.id;
+                    i.dragEnd(cardSpace);
+                    xIndex = i.xIndex;
+                    yIndex = i.yIndex;
                 }
             });
+
         };
 
-        this.CardDrag = function(e) {
-            if (e != null) {
-                if (activeItem != null) {
-                    activeItem.drag(e, roomId, deck);
-                }
-            }
-        };
-
-        this.CardEnd = function() {
-            if (activeItem != null) {
-                cardSpace = activeItem.dragEnd(cardSpace);
-                if (activeItem.yIndexCur === 0) {
-
-                    xIndex = activeItem.xIndex;
-                    yIndex = activeItem.yIndex;
-
-                }
-                activeItem = null;
-            }
-        };
-        //for mouse
-        this.playerDeck.addEventListener("mousedown", this.CardStart, false);
-        this.playerDeck.addEventListener("mouseup", this.CardEnd, false);
-        this.playerDeck.addEventListener("mousemove", this.CardDrag, false);
-        //for touchscreen
-        this.playerDeck.addEventListener("touchstart", this.CardStart, false);
-        this.playerDeck.addEventListener("touchend", this.CardEnd, false);
-        this.playerDeck.addEventListener("touchmove", this.CardDrag, false);
+     
+        this.playerDeck.addEventListener("click", this.CardSelect, false);
     }
 
     EndMove() {
@@ -204,6 +174,8 @@
         this.container.removeEventListener("touchstart", this.DragStart, false);
         this.container.removeEventListener("touchend", this.DragEnd, false);
         this.container.removeEventListener("touchmove", this.Drag, false);
+
+        this.playerDeck.removeEventListener("click", this.CardSelect, false);
     }
 
  
@@ -218,7 +190,7 @@
     }
 
     RemovePawn(pawnId) {
-        //var opponent = this.opponent
+
         var removed = false;
         for (var i = 0; i < this.player.length; i++) {
             if (this.player[i].id === pawnId) {
@@ -257,20 +229,11 @@
                 }
             }
         }
-
-        //for (i = 0; i < pawns.length; i++) {
-        //    if (_pawn.id == pawns[i].id) {
-        //        this.pIndex = i;
-        //        break;
-        //    }
-
-        //}
     }
 
     MovePiece(_piece) {
         //moving pawn to coordinates that other player has moved it to
-        //  var i = this.pIndex;
-        //var x = this.player;
+
         var piece = this.pieces[this.pIndex1][this.pIndex2];
         piece.setTranslate(_piece.left, _piece.top);
         //updating pawn info to that of the other player
@@ -283,4 +246,46 @@
 
         //!only change pos of dom element untile move is complete dont bother with the other pawn objects
     }
+
+    FindActiveCard(cardId, cards) {
+
+            for (var i = 0; i < cards.length; i++) {
+                if (cards[i].id === cardId) {
+                    return cards[i];
+                    break;
+                }
+            }
+    }
+
+    SetCards(cardId, playerCards) {
+        var playerCard = this.FindActiveCard(cardId, playerCards);
+        var playerDom;
+        var centreDom;
+
+ 
+        playerCards = this.ListRemove(playerCards, playerCard);
+        playerCards.push(this.centreCard);
+        playerDom = playerCard.domElement;
+        centreDom = this.centreCard.domElement;
+        this.centreCard = playerCard;
+        this.centreCard.domElement = centreDom;
+        this.centreCard.SetContent();
+        playerCards[1].domElement = playerDom;
+        playerCards[1].SetContent();
+
+        return playerCards;
+
+    }
+
+    SwapCard(cardId) {
+
+        if (this.canMove) {//so that it knows which list to go through to find swapped cards
+            this.playerCards = this.SetCards(cardId, this.playerCards);
+        } else {
+            this.opponentCard = this.SetCards(cardId, this.opponentCard);
+        }
+
+        this.centreCard.RotateCard();
+    }
+
 }//make an piece class with object dragging, then add either pawn or card to the piece class, write about it alot in CW
