@@ -1,5 +1,5 @@
 ﻿class Piece {
-    constructor(_item, connection, id) {
+    constructor(connection, id, _item) {
         this.id = id;
         this.domElement = _item;
         this.active = false;
@@ -150,7 +150,7 @@
 class Pawn extends Piece {
     constructor(domElement, connection, id, colour, type) {
 
-        super(domElement, connection, id);
+        super(connection, id, domElement);
         this.colour = colour;//0 for red, 1 for blue
         this.type = type;//0 for normal, 1 for master
         this.possiblePos = [];
@@ -258,8 +258,8 @@ class Pawn extends Piece {
 
 class Card extends Piece{
     //this.deck = [100, 250, 400];
-    constructor(xIndex, yIndex, colour, source, domElement, connection, id) {
-        super(domElement, connection, id)
+    constructor(xIndex, yIndex, colour, source, connection, id) {
+        super(connection, id)
         this.xIndex = xIndex;
         this.yIndex = yIndex;
         this.colour = colour;//add colour attribute to Piece rather as cards and pawns have a colour

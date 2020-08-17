@@ -12,14 +12,16 @@
         this.cont = container;
     }
 
-    Test2() {
-        console.log(this.board);
+
+    GenerateCards() {
+        this.board.PopulateCards();
     }
 
     start() {
         //runs Move method in board, if player was first to join
         var _players = this.players;
         var _userId = this.userId;
+
 
         if (_players[0] !== _userId) {
             this.board.playerDeck = document.querySelector("#deck2");

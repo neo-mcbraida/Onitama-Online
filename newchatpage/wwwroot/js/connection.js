@@ -12,10 +12,11 @@ const userName = urlParams.get('userName');
 connection.on("SendGameInfo", function (userId) {
 
     game.players.push(userId);
+    game.GenerateCards();
     //if this client was the first to join a game this client invokes
     //method that sends the game info to th client that called the method
     if (game.players[0] == game.userId) {
-        connection.invoke("EchoGameInfo", game.players, userId);
+        connection.invoke("EchoGameInfo", game.players, game.board.cards, game.board.centreCard, userId);
     }
 
 });
@@ -25,11 +26,13 @@ connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game
 });
 
 
-connection.on("RecieveGameInfo", function (_players, _userId) {
+connection.on("RecieveGameInfo", function (_players, cards, centreCard, _userId) {
     //recieves game info and updates its own instance of Game 
     //so the it has the same game values as the other client
     game.players = _players;
     game.userId = _userId;
+    game.board.AddCards(cards, centreCard);
+    
     //invokes a method that starts game for all clients in room
     connection.invoke("StartGame", game.roomId);
 });

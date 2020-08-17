@@ -6,6 +6,7 @@ using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Transactions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
 
 namespace newchatpage.Hubs
@@ -38,10 +39,10 @@ namespace newchatpage.Hubs
 
         }
 
-        public async Task EchoGameInfo(string[] players, string userId)
+        public async Task EchoGameInfo(string[] players, object[][]cards, object centreCard, string userId)
         {
             //sends game info to new clients that requested it
-            await Clients.Client(userId).SendAsync("RecieveGameInfo", players, userId);
+            await Clients.Client(userId).SendAsync("RecieveGameInfo", players, cards, centreCard, userId);
         }
 
 

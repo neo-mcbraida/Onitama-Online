@@ -23,27 +23,42 @@
         this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
 
 
-        this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/bat.jpg")', document.querySelector("#card1"), connection, 11);
-        this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/bison.jpg")', document.querySelector("#card2"), connection, 12);
-        this.c3 = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/bear.jpg")', document.querySelector("#card3"), connection, 13);
-        this.c4 = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crawler.jpg")', document.querySelector("#card4"), connection, 14);
-        this.c5 = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/cow.jpg")', document.querySelector("#card5"), connection, 15);
+        this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/rabbit.jpg")', connection, 11);
+        this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/dragon.jpg")', connection, 12);
+        this.c3 = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/ox.jpg")', connection, 13);
+        this.c4 = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crab.jpg")', connection, 14);
+        this.c5 = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/boar.jpg")', connection, 15);
 
+        this.c6 = new Card([0, 1, -1], [-1, 1, 1], 0, 'url("/assets/cobra.jpg")', connection, 16);
+        this.c7 = new Card([2, -1], [0, 0], 1, 'url("/assets/tiger.jpg")', connection, 17);
+        this.c8 = new Card([-1, -1, 1], [-1, 1, 0], 1, 'url("/assets/crane.jpg")', connection, 18);
+        this.c9 = new Card([0, 1, 0, -1], [-1, -1, 1, 1], 3, 'url("/assets/goose.jpg")', connection, 19);
+        this.c10 = new Card([0, 1, 0, 1], [-1, -1, 1, 1], 1, 'url("/assets/elephant.jpg")', connection, 20);
+
+        this.c11 = new Card([-1, 1, -1, 1], [-1, -1, 1, 1], 1, 'url("/assets/monkey.jpg")', connection, 21);
+        this.c12 = new Card([-1, 1, 1], [0, -1, 1], 1, 'url("/assets/mantis.jpg")', connection, 22);
+        this.c13 = new Card([-1, 0, 1], [-1, 1, -1], 3, 'url("/assets/eel.jpg")', connection, 23);
+        this.c14 = new Card([-1, 0, 0, 1], [-1, -1, 1, 1], 0, 'url("/assets/rooster.jpg")', connection, 24);
+        this.c15 = new Card([-1, 1, 0], [0, 0, -1], 3, 'url("/assets/horse.jpg")', connection, 25);
+
+        this.c16 = new Card([-1, 1, 0], [1, -2, -1], 3, 'url("/assets/frog.jpg")', connection, 26);
+
+        this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5, this.c6, this.c7, this.c8, this.c9, this.c10, this.c11, this.c12, this.c13, this.c14, this.c15, this.c16];
 
         this.centreCard = this.c3;
 
         this.selectedCardId = new Card();
 
-        this.playerCards = [this.c1, this.c2];
-        this.opponentCard = [this.c4, this.c5];
+        this.playerCards = [];
+        this.opponentCard = [];
 
         this.cards = [this.playerCards, this.opponentCard];
 
         this.playerTurn = true;
 
 
-        this.player = [this.p1, this.p2, this.p3, this.p4, this.p5]
-        this.opponent = [this.p6, this.p7, this.p8, this.p9, this.p10]
+        this.player = [this.p1, this.p2, this.p3, this.p4, this.p5];
+        this.opponent = [this.p6, this.p7, this.p8, this.p9, this.p10];
         this.canMove = true;
 
         this.pieces = [];//using only array of opponent pieces, as do not need to set active for clients side pieces
@@ -57,6 +72,64 @@
 
     }
 
+
+    AddCards(cards, centreCard) {
+
+        for (var i = 0; i < cards.length; i++) {
+
+            this.playerCards.push(this.FindActiveCard(cards[0][i].id, this.allCards));
+            this.opponentCard.push(this.FindActiveCard(cards[1][i].id, this.allCards));
+        }
+
+        this.centreCard = this.FindActiveCard(centreCard.id, this.allCards);
+
+        this.ClearCards(this.allCards);
+        this.SetDiv();
+    }
+
+    SetDiv() {
+        this.playerCards[0].domElement = document.querySelector("#card1");
+        this.playerCards[1].domElement = document.querySelector("#card2");
+        this.centreCard.domElement = document.querySelector("#card3");
+        this.opponentCard[0].domElement = document.querySelector("#card4");
+        this.opponentCard[1].domElement = document.querySelector("#card5");
+    }
+
+    GetCard(item) {
+        
+        var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
+        
+
+        //this.cards.push(this.allCards[index]);
+        if (Array.isArray(item)) {
+            item.push(this.allCards[index]);
+        } else { item = this.allCards[index]; }
+        this.allCards = this.ListRemove(this.allCards, this.allCards[index]);
+    }
+
+    PopulateCards() {
+        
+        this.GetCard(this.playerCards);
+
+        this.GetCard(this.opponentCard);
+        this.GetCard(this.playerCards);
+        this.GetCard(this.opponentCard);
+        
+        this.GetCard(this.centreCard);
+
+        this.SetDiv();
+
+        this.ClearCards(this.allCards);
+
+    }
+
+    ClearCards(cards) {
+        for (var i = 0; i < cards.length; i++) {
+            delete (cards[i]);
+        };
+
+        //delete (cards);
+    }
 
 
     Start() {
