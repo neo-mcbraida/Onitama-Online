@@ -13,12 +13,30 @@
     }
 
 
+    AlertWinner(player) {
+        var myDiv = document.getElementById("winner");
+        myDiv.innerHTML = (player + " Wins");
+        myDiv.style.zIndex = 2;
+    }
+
     GenerateCards() {
         this.board.PopulateCards();
     }
 
+    EndGame(pawnId, player) {
+        console.log(player);
+        if (this.canMove) {
+            this.canMove = false;
+            this.board.canMove = false;
+            this.board.SwapTurn(pawnId);
+        }
+
+        this.AlertWinner(player);
+    }
+
     start() {
         //runs Move method in board, if player was first to join
+        
         var _players = this.players;
         var _userId = this.userId;
         

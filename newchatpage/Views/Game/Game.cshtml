@@ -116,6 +116,18 @@
         z-index: 1;
     }
 
+    #winner {
+        padding-top:40%; 
+        text-align:center;
+        z-index: 0;
+        font-size: 400%;
+        position: absolute;
+        overflow: visible;
+        width: 100%;
+
+
+    }
+
 </style>
 
 <body>
@@ -141,7 +153,7 @@
                 <div class="header">
                     <div id="card3" class="card" style="display: inline-block; position: relative;"></div>
                 </div>
-                <div id="board" @*class="column"*@ @*style="background-color:#bbb*@; width: 500px;">
+                <div id="board" @*class="column"*@ @*style="background-color:#bbb*@ width: 500px;">
 
                     <div class="item" id="item1" style="left:0px; top:0px;">
 
@@ -173,6 +185,7 @@
                     <div class="item2" id="item10" style="left:400px; top:400px;">
 
                     </div>
+                    <div class="winner" id="winner"></div>
                 </div>
             </div>
             <div id="deck2" class="column" @*style="background-color:#ccc;*@">

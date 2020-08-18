@@ -5,11 +5,12 @@
         this.playerDeck;
         this.board = [0, 100, 200, 300, 400];
 
+        this.userName = urlParams.get('userName');
         this.cardSpace = 0;
 
         this.roomId = roomId;
         this.connection = connection;
-        this.canMove = true;
+        this.canMove = true; //, [4, 2] , [0, 2]
         this.p1 = new Pawn(document.querySelector("#item1"), connection, 1, 0, 0);
         this.p2 = new Pawn(document.querySelector("#item2"), connection, 2, 0, 0);
         this.p3 = new Pawn(document.querySelector("#item3"), connection, 3, 0, 1);
@@ -82,7 +83,7 @@
             this.playerCards[i].RotateCard();
            
             this.opponentCard.push(this.FindActiveCard(cards[1][i].id, this.allCards));
-            //this.opponentCard[i].RotateCard();
+
         }
 
         this.centreCard = this.FindActiveCard(centreCard.id, this.allCards);
@@ -211,7 +212,7 @@
         };
         this.DragEnd = function (e) {
             if (activeItem != null) {
-                activeItem.dragEnd(board, opponent, selectedCardId);
+                activeItem.dragEnd(board, opponent, selectedCardId, userName);
                 activeItem = null;
             }
         };
@@ -370,5 +371,6 @@
         //    this.centreCard.RotateCard();
         //}
     }
+
 
 }//make an piece class with object dragging, then add either pawn or card to the piece class, write about it alot in CW

@@ -26,6 +26,7 @@
         this.xIndexPrev = this.GetClosest(board, this.left);
         this.yIndexCur = this.yIndexPrev;
         this.xIndexCur = this.xIndexPrev;
+        
         console.log(this.xIndexCur, this.yIndexCur);
     }
 
@@ -135,10 +136,14 @@
         this.connection.invoke("Move", this, roomId, dStart);
     }
 
-    SwapMove(roomId, pawnId, cardId) {
+    SwapMove(roomId, pawnId, cardId, player) {
         //invokes method  that swaps player turn between players
-        
-        this.connection.invoke("SwapMove", roomId, pawnId, cardId);
+        var won = this.WinningMove(pawnId);
+        if (won) {
+            this.connection.invoke("EndGame", roomId, pawnId, player)
+        } else {
+            this.connection.invoke("SwapMove", roomId, pawnId, cardId);
+        }
     }
 
     SetActive(domElement, id) {
@@ -151,11 +156,12 @@ class Pawn extends Piece {
     constructor(domElement, connection, id, colour, type) {
 
         super(connection, id, domElement);
-        this.colour = colour;//0 for red, 1 for blue
+        this.colour = colour;//1 for red, 0 for blue
         this.type = type;//0 for normal, 1 for master
         this.possiblePos = [];
         this.xIndex;
         this.yIndex;
+        //this.opDoor = opponentDoor;
     }
 
     highlightPos(players) {
@@ -174,6 +180,24 @@ class Pawn extends Piece {
                 this.possiblePos.push(pos);
             }
         }
+    }
+
+    WinningMove(pawnId) {
+        
+        if (this.xIndexCur === 4 && this.yIndexCur === 2) {
+            if (this.colour === 0) {
+                return true;
+            }
+        } else if (this.xIndexCur === 0 && this.yIndexCur === 2) {
+            if (this.colour === 1) {
+                return true;
+            }
+        } else if (pawnId === 3 || pawnId === 8) {
+            return true;
+        } else { return false; }
+        
+
+
     }
 
     PosFree(pawns, xIn, yIn) {
@@ -216,7 +240,7 @@ class Pawn extends Piece {
         return possible;
     }
 
-    dragEnd(board, opponent, cardId) {
+    dragEnd(board, opponent, cardId, player) {
 
         //board is array of x/y coordinates
         if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
@@ -231,7 +255,7 @@ class Pawn extends Piece {
                 var takePiece = false;
                 var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
-                this.SwapMove(roomId, pawnId, cardId);
+                this.SwapMove(roomId, pawnId, cardId, player);
             } else {
                 this.xIndexCur = this.xIndexPrev;
                 this.yIndexCur = this.yIndexPrev;

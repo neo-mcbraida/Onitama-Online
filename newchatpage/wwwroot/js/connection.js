@@ -59,6 +59,12 @@ connection.on("SwapMove", function (pawnId, cardId) {
     game.SwapTurn(pawnId, cardId);
 });
 
+
+connection.on("EndGame", function (pawnId, player) {
+    game.EndGame(pawnId, player);
+});
+
+
 connection.on("ReceiveMessage", function (userName, message) {//this adds any new message revieved to ordered list for each client
     //converts specific symbols into format that html can output, and protects from script Injection
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -85,4 +91,5 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     });
     event.preventDefault();
 });
+
 
