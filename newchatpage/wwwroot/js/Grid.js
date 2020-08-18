@@ -46,7 +46,7 @@
 
         this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5, this.c6, this.c7, this.c8, this.c9, this.c10, this.c11, this.c12, this.c13, this.c14, this.c15, this.c16];
 
-        this.centreCard = this.c3;
+        this.centreCard = new Card();
 
         this.selectedCardId = new Card();
 
@@ -83,7 +83,7 @@
             this.playerCards[i].RotateCard();
            
             this.opponentCard.push(this.FindActiveCard(cards[1][i].id, this.allCards));
-            this.playerCards[i].RotateCard();
+            this.opponentCard[i].RotateCard();
 
         }
 
@@ -104,16 +104,23 @@
         this.opponentCard[1].domElement = document.querySelector("#card5");
     }
 
+    ReturnCard() {
+        var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
+
+        return this.allCards[index]
+
+        this.allCards = this.ListRemove(this.allCards, this.allCards[index]);
+    }
+
     GetCard(item) {
         
-        var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
-        
-
-        //this.cards.push(this.allCards[index]);
         if (Array.isArray(item)) {
-            item.push(this.allCards[index]);
-        } else { item = this.allCards[index]; }
-        this.allCards = this.ListRemove(this.allCards, this.allCards[index]);
+            var Card = this.ReturnCard();
+            item.push(Card);
+
+        }
+
+
     }
 
     PopulateCards() {
@@ -123,8 +130,9 @@
         this.GetCard(this.opponentCard);
         this.GetCard(this.playerCards);
         this.GetCard(this.opponentCard);
-        
-        this.GetCard(this.centreCard);
+
+        this.centreCard = this.ReturnCard();
+
 
         this.SetDiv();
 
