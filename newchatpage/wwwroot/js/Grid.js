@@ -107,19 +107,18 @@
     ReturnCard() {
         var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
 
-        var pHolder = this.allCards[index];
 
-        this.allCards = this.ListRemove(this.allCards, this.allCards[index]);
+        return this.allCards[index];
 
-        return pHolder;
+
     }
 
     GetCard(item) {
         
         if (Array.isArray(item)) {
-            var Card = this.ReturnCard();
-            item.push(Card);
-
+            var card = this.ReturnCard();
+            item.push(card);
+            this.allCards = this.ListRemove(this.allCards, card);
         }
 
 
