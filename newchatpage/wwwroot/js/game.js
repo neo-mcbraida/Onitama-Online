@@ -39,6 +39,8 @@
         
         var _players = this.players;
         var _userId = this.userId;
+
+        var startIndex = this.board.GetStartColour();
         
         if (_players[0] !== _userId) {
             this.board.playerDeck = document.querySelector("#deck2");
@@ -49,20 +51,22 @@
             var pHolder = this.board.player;
             this.board.player = this.board.opponent;
             this.board.opponent = pHolder;
-            this.board.playerTurn = false;    
-            this.SetTurn(null);
-            this.board.playerCards.forEach(function (i) {//times by -1 all the possible positions for a card
-                for (var u = 0; u < i.xIndex.length; u++) {
-                    i.xIndex[u] = i.xIndex[u] * -1;
-                    i.yIndex[u] = i.yIndex[u] * -1;
-                }
-            });
+            //this.board.playerCards.forEach(function (i) {//times by -1 all the possible positions for a card
+            //    for (var u = 0; u < i.xIndex.length; u++) {
+            //        i.xIndex[u] = i.xIndex[u] * -1;
+            //        i.yIndex[u] = i.yIndex[u] * -1;
+            //    }
+            //});
         } else {
             this.board.playerDeck = document.querySelector("#deck1");
             this.board.opponentDeck = document.querySelector("#deck2");
         }
 
-        
+        if (_players[startIndex] !== _userId) {
+            this.board.playerTurn = false;
+            this.SetTurn(null);
+        }
+
 
         this.board.activeItem = null
         this.board.Start();

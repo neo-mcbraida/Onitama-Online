@@ -286,7 +286,7 @@ class Card extends Piece{
         super(connection, id)
         this.xIndex = xIndex;
         this.yIndex = yIndex;
-        this.colour = colour;//add colour attribute to Piece rather as cards and pawns have a colour
+        this.colour = colour;//1 for red, 0 for blue
         this.source = source;
     }
 

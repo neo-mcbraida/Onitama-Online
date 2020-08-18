@@ -27,22 +27,22 @@
         this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/rabbit.jpg")', connection, 11);
         this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/dragon.jpg")', connection, 12);
         this.c3 = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/ox.jpg")', connection, 13);
-        this.c4 = new Card([0, 1, 0], [-2, 0, 2], 1, 'url("/assets/crab.jpg")', connection, 14);
+        this.c4 = new Card([0, 1, 0], [-2, 0, 2], 0, 'url("/assets/crab.jpg")', connection, 14);
         this.c5 = new Card([0, 1, 0], [-1, 0, 1], 1, 'url("/assets/boar.jpg")', connection, 15);
 
-        this.c6 = new Card([0, 1, -1], [-1, 1, 1], 0, 'url("/assets/cobra.jpg")', connection, 16);
-        this.c7 = new Card([2, -1], [0, 0], 1, 'url("/assets/tiger.jpg")', connection, 17);
-        this.c8 = new Card([-1, -1, 1], [-1, 1, 0], 1, 'url("/assets/crane.jpg")', connection, 18);
-        this.c9 = new Card([0, 1, 0, -1], [-1, -1, 1, 1], 3, 'url("/assets/goose.jpg")', connection, 19);
+        this.c6 = new Card([0, 1, -1], [-1, 1, 1], 1, 'url("/assets/cobra.jpg")', connection, 16);
+        this.c7 = new Card([2, -1], [0, 0], 0, 'url("/assets/tiger.jpg")', connection, 17);
+        this.c8 = new Card([-1, -1, 1], [-1, 1, 0], 0, 'url("/assets/crane.jpg")', connection, 18);
+        this.c9 = new Card([0, 1, 0, -1], [-1, -1, 1, 1], 0, 'url("/assets/goose.jpg")', connection, 19);
         this.c10 = new Card([0, 1, 0, 1], [-1, -1, 1, 1], 1, 'url("/assets/elephant.jpg")', connection, 20);
                                 
-        this.c11 = new Card([-1, 1, -1, 1], [-1, -1, 1, 1], 1, 'url("/assets/monkey.jpg")', connection, 21);
+        this.c11 = new Card([-1, 1, -1, 1], [-1, -1, 1, 1], 0, 'url("/assets/monkey.jpg")', connection, 21);
         this.c12 = new Card([-1, 1, 1], [0, -1, 1], 1, 'url("/assets/mantis.jpg")', connection, 22);
-        this.c13 = new Card([-1, 0, 1], [-1, 1, -1], 3, 'url("/assets/eel.jpg")', connection, 23);
-        this.c14 = new Card([-1, 0, 0, 1], [-1, -1, 1, 1], 0, 'url("/assets/rooster.jpg")', connection, 24);
-        this.c15 = new Card([-1, 1, 0], [0, 0, -1], 3, 'url("/assets/horse.jpg")', connection, 25);
+        this.c13 = new Card([-1, 0, 1], [-1, 1, -1], 0, 'url("/assets/eel.jpg")', connection, 23);
+        this.c14 = new Card([-1, 0, 0, 1], [-1, -1, 1, 1], 1, 'url("/assets/rooster.jpg")', connection, 24);
+        this.c15 = new Card([-1, 1, 0], [0, 0, -1], 1, 'url("/assets/horse.jpg")', connection, 25);
 
-        this.c16 = new Card([-1, 0, 1], [1, -2, -1], 3, 'url("/assets/frog.jpg")', connection, 26);
+        this.c16 = new Card([-1, 0, 1], [1, -2, -1], 1, 'url("/assets/frog.jpg")', connection, 26);
 
         this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5, this.c6, this.c7, this.c8, this.c9, this.c10, this.c11, this.c12, this.c13, this.c14, this.c15, this.c16];
 
@@ -83,6 +83,7 @@
             this.playerCards[i].RotateCard();
            
             this.opponentCard.push(this.FindActiveCard(cards[1][i].id, this.allCards));
+            this.playerCards[i].RotateCard();
 
         }
 
@@ -370,6 +371,13 @@
         //if (this.canMove === false) {
         //    this.centreCard.RotateCard();
         //}
+    }
+
+    GetStartColour() {
+        //first player to join game is blue, added to player list at index0
+        if (this.centreCard.colour === 0) {//0 is enumeration of blue
+            return 0;//
+        } else { return 1; }
     }
 
 
