@@ -21,8 +21,7 @@
         //runs Move method in board, if player was first to join
         var _players = this.players;
         var _userId = this.userId;
-
-
+        
         if (_players[0] !== _userId) {
             this.board.playerDeck = document.querySelector("#deck2");
             this.board.opponentDeck = document.querySelector("#deck1");
@@ -55,7 +54,9 @@
     SwapTurn(pawnId, cardId) {
         //swaps canMove around and then runs Move method in board
         //with new canMove value
+        
         this.board.SwapCard(cardId);
+        
 
         if (pawnId !== null) {
             this.board.RemovePawn(pawnId);

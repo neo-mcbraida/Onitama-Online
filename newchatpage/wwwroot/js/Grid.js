@@ -34,14 +34,14 @@
         this.c8 = new Card([-1, -1, 1], [-1, 1, 0], 1, 'url("/assets/crane.jpg")', connection, 18);
         this.c9 = new Card([0, 1, 0, -1], [-1, -1, 1, 1], 3, 'url("/assets/goose.jpg")', connection, 19);
         this.c10 = new Card([0, 1, 0, 1], [-1, -1, 1, 1], 1, 'url("/assets/elephant.jpg")', connection, 20);
-
+                                
         this.c11 = new Card([-1, 1, -1, 1], [-1, -1, 1, 1], 1, 'url("/assets/monkey.jpg")', connection, 21);
         this.c12 = new Card([-1, 1, 1], [0, -1, 1], 1, 'url("/assets/mantis.jpg")', connection, 22);
         this.c13 = new Card([-1, 0, 1], [-1, 1, -1], 3, 'url("/assets/eel.jpg")', connection, 23);
         this.c14 = new Card([-1, 0, 0, 1], [-1, -1, 1, 1], 0, 'url("/assets/rooster.jpg")', connection, 24);
         this.c15 = new Card([-1, 1, 0], [0, 0, -1], 3, 'url("/assets/horse.jpg")', connection, 25);
 
-        this.c16 = new Card([-1, 1, 0], [1, -2, -1], 3, 'url("/assets/frog.jpg")', connection, 26);
+        this.c16 = new Card([-1, 0, 1], [1, -2, -1], 3, 'url("/assets/frog.jpg")', connection, 26);
 
         this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5, this.c6, this.c7, this.c8, this.c9, this.c10, this.c11, this.c12, this.c13, this.c14, this.c15, this.c16];
 
@@ -75,13 +75,20 @@
 
     AddCards(cards, centreCard) {
 
+        console.log(cards, centreCard);
+        //flip all cards for player two at start, instead of doing for each move
         for (var i = 0; i < cards.length; i++) {
-
             this.playerCards.push(this.FindActiveCard(cards[0][i].id, this.allCards));
+            this.playerCards[i].RotateCard();
+           
             this.opponentCard.push(this.FindActiveCard(cards[1][i].id, this.allCards));
+            //this.opponentCard[i].RotateCard();
         }
 
         this.centreCard = this.FindActiveCard(centreCard.id, this.allCards);
+        this.centreCard.RotateCard();
+
+        console.log(this.playerCards, this.opponentCard, this.centreCard);
 
         this.ClearCards(this.allCards);
         this.SetDiv();
@@ -319,6 +326,7 @@
 
         //!only change pos of dom element untile move is complete dont bother with the other pawn objects
     }
+    
 
     FindActiveCard(cardId, cards) {
 
@@ -358,7 +366,9 @@
             this.opponentCard = this.SetCards(cardId, this.opponentCard);
         }
 
-        this.centreCard.RotateCard();
+        //if (this.canMove === false) {
+        //    this.centreCard.RotateCard();
+        //}
     }
 
 }//make an piece class with object dragging, then add either pawn or card to the piece class, write about it alot in CW
