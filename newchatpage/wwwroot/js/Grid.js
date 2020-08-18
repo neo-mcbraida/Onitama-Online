@@ -107,9 +107,11 @@
     ReturnCard() {
         var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
 
-        return this.allCards[index]
+        var pHolder = this.allCards[index];
 
         this.allCards = this.ListRemove(this.allCards, this.allCards[index]);
+
+        return pHolder;
     }
 
     GetCard(item) {
