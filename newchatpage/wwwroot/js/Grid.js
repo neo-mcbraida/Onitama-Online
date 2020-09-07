@@ -44,7 +44,10 @@
 
         this.c16 = new Card([-1, 0, 1], [1, -2, -1], 1, 'url("/assets/frog.jpg")', connection, 26);
 
-        this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5, this.c6, this.c7, this.c8, this.c9, this.c10, this.c11, this.c12, this.c13, this.c14, this.c15, this.c16];
+        this.allCards = [this.c1, this.c2, this.c3, this.c4, this.c5,
+                        this.c6, this.c7, this.c8, this.c9, this.c10,
+                        this.c11, this.c12, this.c13, this.c14, this.c15,
+                        this.c16];
 
         this.centreCard = new Card();
 
@@ -106,11 +109,7 @@
 
     ReturnCard() {
         var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
-
-
         return this.allCards[index];
-
-
     }
 
     GetCard(item) {
@@ -126,14 +125,12 @@
 
     PopulateCards() {
         
-        this.GetCard(this.playerCards);
-
+        this.GetCard(this.playerCards)
         this.GetCard(this.opponentCard);
         this.GetCard(this.playerCards);
         this.GetCard(this.opponentCard);
 
         this.centreCard = this.ReturnCard();
-
 
         this.SetDiv();
 
@@ -146,7 +143,6 @@
             delete (cards[i]);
         };
 
-        //delete (cards);
     }
 
 
@@ -191,6 +187,7 @@
 
 
         var selectedCardId = this.selectedCardId;
+        var centre = this.centreCard;
         var cards = this.playerCards;
         var opponent = this.opponent;
         var player = this.player;
@@ -209,7 +206,6 @@
                 if (e.target == i.domElement) {
                     activeItem = i;
                     activeItem.dragStart(e, container, xIndex, yIndex, player);
-                    console.log(player);
                 }
             });
         };
@@ -238,12 +234,13 @@
 
         this.CardSelect = function (e) {
 
-            console.log(cards);
             cards.forEach(function (i) {
 
                 if (e.target == i.domElement) {
                     selectedCardId = i.id;
-                    i.dragEnd(cardSpace);
+
+                    console.log('centre card:', centre);
+                    console.log('player card:', i);
                     xIndex = i.xIndex;
                     yIndex = i.yIndex;
                 }
@@ -304,6 +301,7 @@
                 }
             }
         }
+
         
     }
     
@@ -377,6 +375,8 @@
             this.opponentCard = this.SetCards(cardId, this.opponentCard);
         }
 
+        console.log('centre card:', this.centreCard);
+        console.log('player card:', this.playerCards[1]);
         //if (this.canMove === false) {
         //    this.centreCard.RotateCard();
         //}
@@ -384,9 +384,9 @@
 
     GetStartColour() {
         //first player to join game is blue, added to player list at index0
-        if (this.centreCard.colour === 0) {//0 is enumeration of blue
-            return 0;//
-        } else { return 1; }
+        //0 is enumeration of blue
+        
+        return this.centreCard.colour;
     }
 
 

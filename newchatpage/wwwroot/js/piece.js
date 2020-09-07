@@ -26,8 +26,7 @@
         this.xIndexPrev = this.GetClosest(board, this.left);
         this.yIndexCur = this.yIndexPrev;
         this.xIndexCur = this.xIndexPrev;
-        
-        console.log(this.xIndexCur, this.yIndexCur);
+       
     }
 
     setTranslate(xPos, yPos) {
@@ -40,12 +39,11 @@
     dragStart(e, container, xIndex, yIndex, players) {
         if (this.canMove) {
 
+
             if (xIndex != null && yIndex != null) {
                 this.xIndex = xIndex;
                 this.yIndex = yIndex;
                 this.highlightPos(players);
-                console.log(xIndex);
-                console.log(yIndex);
 
             }
             this.Move(roomId, true);
@@ -67,8 +65,6 @@
                 this.xOffset = e.pageX - (_Xoffset + deckOffset.left);
             }
 
-            console.log(this.yOffset);
-            console.log(this.xOffset);
             //if object clicked on is this pawn
             if (e.target === this.domElement) {
                 this.active = true;
@@ -185,11 +181,11 @@ class Pawn extends Piece {
     WinningMove(pawnId) {
         
         if (this.xIndexCur === 4 && this.yIndexCur === 2) {
-            if (this.colour === 0) {
+            if (this.id === 3) {
                 return true;
             }
         } else if (this.xIndexCur === 0 && this.yIndexCur === 2) {
-            if (this.colour === 1) {
+            if (this.id === 8) {
                 return true;
             }
         } else if (pawnId === 3 || pawnId === 8) {
@@ -264,7 +260,6 @@ class Pawn extends Piece {
             //sets current x and y to positions to coordinates of space on board that pawn is closest to
             this.left = board[this.xIndexCur];
             this.top = board[this.yIndexCur];
-
 
 
             this.setTranslate(this.left, this.top, this.domElement);
