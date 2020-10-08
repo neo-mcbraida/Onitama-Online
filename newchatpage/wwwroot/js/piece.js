@@ -161,7 +161,7 @@ class Pawn extends Piece {
     }
 
     highlightPos(players) {
-        var grid = [0, 100, 200, 300, 400];
+        var grid = [0, 70, 140, 210, 280];
         for (var i = 0; i < this.xIndex.length; i++) {
 
             var xIn = this.xIndexPrev + this.xIndex[i];
@@ -200,16 +200,15 @@ class Pawn extends Piece {
         var free = true;
         var pawnId;
         if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {
-            for (var i = 0; i < pawns.length; i++) {// foreach pos iterate through player, not for each player iterate throgh each pos.
+            for (var i = 0; i < pawns.length; i++) {// foreach pos iterate through pawn, not for each pawn iterate throgh each pos.
                 if (pawns[i].xIndexCur === xIn && pawns[i].yIndexCur === yIn) {
                     free = false
                     pawnId = pawns[i].id;
                     break;
                 }
-
             }
+        } else { free = false; }
 
-        } else { free = false;}
         if (free) { return null; } else { return pawnId;}
 
     }
@@ -248,7 +247,7 @@ class Pawn extends Piece {
             if (this.CanMove()) {
                 this.xIndexPrev = this.xIndexCur;
                 this.yIndexPrev = this.yIndexCur;
-                var takePiece = false;
+                //returns Id of opponent pawn, if it is getting taken
                 var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
                 this.SwapMove(roomId, pawnId, cardId, player);
@@ -310,45 +309,6 @@ class Card extends Piece{
         active = this;
     }
 
-    dragEnd(cardSpace) {
-
-        ///if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
-
-            var deck = [100, 250, 400];//deck is array of y coordinates for card spaces
-            //this.yIndexCur = this.GetClosest(deck, this.top);
-            
-
-            //if (cardSpace === this.yIndexCur) {
-            //    //sets current x and y to positions to coordinates of space on board that pawn is closest to
-            //    this.top = deck[this.yIndexCur];
-            //    cardSpace = this.GetClosest(deck, this.yPrev);
-            //    this.yPrev = this.top;
-
-            //} else {
-            //    this.yIndexCur = this.GetClosest(deck, this.yPrev);
-            //    this.top = this.yPrev
-
-            //}
-           // this.left = 0;
-          //  this.setTranslate(this.left, this.top, this.domElement);
-
-            //if position of pawn has changed, then player has made a move, so;
-            //if (this.yIndexCur != this.yIndexPrev) {
-            //    this.yIndexPrev = this.yIndexCur;
-
-            //}
-
-
-            //runs method that moves pawn to closest space on board
-            //sends coordinate of new position
-            this.Move(roomId, false);
-            //this.active = false;
-
-            //return (cardSpace);
-
-        //}
-
-    }
 
 
 

@@ -1,282 +1,285 @@
-﻿
-<meta name="viewport" content="width=device-width, initial-scale=1">
+﻿<!DOCTYPE html>
+
 
 
     @*<div class="row">&nbsp;</div>*@
 
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
 
-<style>
+            body {
+                background-image: url("/assets/table.jpg");
+            }
 
-    .header {
+            .header {
 
-        padding: 30px;
-        text-align: center;
-        font-size: 35px;
-        display: block;
-    }
+                padding: 30px;
+                text-align: center;
+                font-size: 35px;
+                display: block;
+            }
 
-    .column {
-        -webkit-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        padding: 10px;
-        height: 300px; /* Should be removed. Only for demonstration */
-        width: 150px;
-        position: relative;
-    }
+            .column {
+                -webkit-flex: 1;
+                -ms-flex: 1;
+                flex: 1;
+                padding: 10px;
+                height: 300px; /* Should be removed. Only for demonstration */
+                width: 300px;
+                position: relative;
+            }
 
-    .row {
-        display: -webkit-flex;
-        display: flex;
-    }
+            .game {
+                /*display: -webkit-flex;*/
+                display: flex;
+                position: relative;
+            }
 
-
-    outerContainer {
-        width: 100%;
-        height: 500px;
-        position: relative;
-        display: inline-flex;
-
-    }
-
-    #board {
-        width: 500px;
-        height: 500px;
-        background-image: url("/assets/grid.png");
-        background-position: center; /*Center the image*/
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        background-color: #e8eaec;
-        position: relative;
-        /*display: flex;*/
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 7px;
-        touch-action: none;
-        display: block;
-    }
-
-    .deck {
-        display: inline-block;
-        height: 500px;
-        width: 300px;
-        position: relative;
-        display:inline-flex;
-    }
-
-    .card {
-        /*width: 469px;*/
-        content: url("/assets/bat.jpg");
-        /*display: inline-block;*/
-        margin: 25px;
-        width: 250px;
-        height: 125px;
-        touch-action: none;
-        user-select: none;
-        position: absolute;
-    }
-
-    .placeHolder{
-        width: 20%;
-        height: 20%;
-        background-color: #828282;
-        border-radius: 15%;
-        position: absolute;
-        z-index: 0;
-    }
-
-    .item {
-        margin: 2.5%;
-        width: 15%;
-        height: 15%;
-        padding: 10px;
-        background-color: #0e5cbb;
-        border-radius: 50%;
-        touch-action: none;
-        user-select: none;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        z-index: 1;
-    }
-
-    .item2 {
-        margin: 2.5%;
-        width: 15%;
-        height: 15%;
-        background-color: #e81a1a;
-        border-radius: 50%;
-        touch-action: none;
-        user-select: none;
-        position: absolute;
-        top: 400px;
-        left: 0px;
-        z-index: 1;
-    }
-
-    #winner {
-        padding-top:40%; 
-        text-align:center;
-        z-index: 0;
-        font-size: 400%;
-        position: absolute;
-        overflow: visible;
-        width: 100%;
+            .outerRow {
+                display: flex;
+                position: relative;
+            }
 
 
-    }
+            .outerContainer {
+                width: 100%;
+                height: 500px;
+                position: relative;
+                margin: 10px;
+                display: flex;
+                flex-direction: row; /*| row-reverse | column | column-reverse;*/
+                flex-wrap: wrap;
+            }
 
-</style>
+
+
+            .column {
+                flex: 25%;
+                padding: 20px;
+            }
+
+            #chat {
+                /*background-color: rgba(116, 116, 116, 0.73);*/
+                padding: 20px;
+                margin: 10px;
+                color: #ffffff;
+                position: relative;
+                width: 100%;
+                height: 450px;
+            }
+
+            #board {
+                width: 350px;
+                height: 350px;
+                background-image: url("/assets/Board.jpg");
+                background-position: center; /*Center the image*/
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                background-color: #e8eaec;
+                position: relative;
+                /*display: flex;*/
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                border-radius: 7px;
+                touch-action: none;
+                
+            }
+
+            .deck {
+                height: 500px;
+                width: 300px;
+                position: relative;
+                display:inline-flex;
+                overflow: visible;
+
+            }
+
+            .card {
+                /*width: 469px;*/
+
+                /*display: inline-block;*/
+                margin: 25px;
+                width: 200px;
+                height: 100px;
+                touch-action: none;
+                user-select: none;
+                position: absolute;
+            }
+
+            .placeHolder {
+                width: 20%;
+                height: 20%;
+                background-color: #828282;
+                border-radius: 15%;
+                position: absolute;
+                z-index: 0;
+            }
+
+            .item {
+                margin: 2.5%;
+                width: 15%;
+                height: 15%;
+                padding: 10px;
+                background-color: #0e5cbb;
+                border-radius: 50%;
+                touch-action: none;
+                user-select: none;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                z-index: 1;
+            }
+
+            .item2 {
+                margin: 2.5%;
+                width: 15%;
+                height: 15%;
+                background-color: #e81a1a;
+                border-radius: 50%;
+                touch-action: none;
+                user-select: none;
+                position: absolute;
+                top: 400px;
+                left: 0px;
+                z-index: 1;
+            }
+
+            #winner {
+                padding-top:40%;
+                text-align:center;
+                z-index: 0;
+                font-size: 400%;
+                position: absolute;
+                overflow: visible;
+                width: 100%;
+
+
+            }
+
+            #messagesList {
+                height: 300px;
+                overflow: auto;
+                width: 100%;
+                display: inline-block;
+                max-width: 300px;
+            }
+
+            /* On screens that are 992px wide or less, go from four columns to two columns */
+            @@media screen and (max-width: 1080px) {
+                .column {
+                    flex: 50%;
+                }
+            }
+
+            @@media screen and (max-width: 1080px) {
+                .outerRow {
+                    flex-direction: column;
+                }
+
+                #messagesList {
+                    width: 900px;
+                }
+            }
+
+        </style>
+   
 
 <body>
+    <div id="outerContainer">
+        <div class="outerRow">
+            <div class="game">
+                <div id="deck1" class="column" @*style="background-color:#aaa;"*@>
 
+                    <div id="card1" class="card" style="left: 0px; top: 250px; background-color: rgba(21, 115, 148, 0.70)">
 
+                    </div>
+                    <div id="card2" class="card" style="left:0px; top:400px; background-color: rgba(21, 115, 148, 0.70)">
 
-    <div id="outerContainer" class="outerContainer">
-
-        <div class="row">
-            <div id="deck1" class="column" @*style="background-color:#aaa;"*@>
-                <div class="card" style="content:none; left:0px;  top:100px;">
+                    </div>
 
                 </div>
-                <div id="card1" class="card" style="left:0px; top:250px;">
+                <div>
+                    <div class="header" style="width:300px;">
+                        <div id="card3" class="card" style="display: inline-block; position: relative; background-color: rgba(67, 67, 67, 0.75)"></div>
+                    </div>
+                    <div id="board" @*class="column"*@ @*style="background-color:#bbb*@ width: 500px;">
 
+                        <div class="item" id="item1" style="left:0px; top:0px;">
+
+                        </div>
+                        <div class="item" id="item2" style="left: 0px; top: 70px;">
+
+                        </div>
+                        <div class="item" id="item3" style="left:0px; top:140px; margin:0px; height:20%; width:20%">
+
+                        </div>
+                        <div class="item" id="item4" style="left: 0px; top: 210px;">
+
+                        </div>
+                        <div class="item" id="item5" style="left:0px; top:280px;">
+
+                        </div>
+                        <div class="item2" id="item6" style="left:280px; top:0px;">
+
+                        </div>
+                        <div class="item2" id="item7" style="left:280px; top:70px;">
+
+                        </div>
+                        <div class="item2" id="item8" style="left:280px; top:140px; margin:0px; height:20%; width:20%">
+
+                        </div>
+                        <div class="item2" id="item9" style="left:280px; top:210px;">
+
+                        </div>
+                        <div class="item2" id="item10" style="left:280px; top:280px;">
+
+                        </div>
+                        <div class="winner" id="winner"></div>
+                    </div>
                 </div>
-                <div id="card2" class="card" style="left:0px; top:400px;">
+                <div id="deck2" class="column" @*style="background-color:#ccc;*@>
 
+                    <div id="card4" class="card" style="left:0px; top:250px; background-color: rgba(160, 47, 47, 0.74)">
+
+                    </div>
+                    <div id="card5" class="card" style="left:0px; top:400px; background-color: rgba(160, 47, 47, 0.74)">
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="chat" class="column" style="background-color: #727272">
+                
+                <div><input type="text" id="messageInput" value="enter message" onfocus="this.value=''"/></div>
+                
+                <div class="row">&nbsp;</div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="button" id="sendButton" value="Send Message" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <hr />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div @*class="col-6" *@>
+                        <ul id="messagesList" style="max-width:300px"></ul>
+                    </div>
                 </div>
 
             </div>
-            <div>
-                <div class="header">
-                    <div id="card3" class="card" style="display: inline-block; position: relative;"></div>
-                </div>
-                <div id="board" @*class="column"*@ @*style="background-color:#bbb*@ width: 500px;">
-
-                    <div class="item" id="item1" style="left:0px; top:0px;">
-
-                    </div>
-                    <div class="item" id="item2" style="left: 0px; top: 100px;">
-
-                    </div>
-                    <div class="item" id="item3" style="left:0px; top:200px; margin:0px; height:20%; width:20%">
-
-                    </div>
-                    <div class="item" id="item4" style="left:0px; top:300px;">
-
-                    </div>
-                    <div class="item" id="item5" style="left:0px; top:400px;">
-
-                    </div>
-                    <div class="item2" id="item6" style="left:400px; top:0px;">
-
-                    </div>
-                    <div class="item2" id="item7" style="left:400px; top:100px;">
-
-                    </div>
-                    <div class="item2" id="item8" style="left:400px; top:200px; margin:0px; height:20%; width:20%">
-
-                    </div>
-                    <div class="item2" id="item9" style="left:400px; top:300px;">
-
-                    </div>
-                    <div class="item2" id="item10" style="left:400px; top:400px;">
-
-                    </div>
-                    <div class="winner" id="winner"></div>
-                </div>
-            </div>
-            <div id="deck2" class="column" @*style="background-color:#ccc;*@">
-                <div class="card" style="content:none; left:0px; top:100px;">
-
-                </div>
-                <div id="card4" class="card" style="left:0px; top:250px;">
-
-                </div>
-                <div id="card5" class="card" style="left:0px; top:400px;">
-
-                </div>
-            </div>
-        </div>
-
-        @*<div class="deck">
-                <div id="card1" class="card">
-
-                </div>
-                <div id="card2" class="card">
-
-                </div>
-
-            </div>*@
-        @*<div id="board">
-
-                <div class="item" id="item1" style="left:0px; top:0px;">
-
-                </div>
-                <div class="item" id="item2" style="left: 0px; top: 100px;">
-
-                </div>
-                <div class="item" id="item3" style="left:0px; top:200px; margin:0px; height:20%; width:20%">
-
-                </div>
-                <div class="item" id="item4" style="left:0px; top:300px;">
-
-                </div>
-                <div class="item" id="item5" style="left:0px; top:400px;">
-
-                </div>
-                <div class="item2" id="item6" style="left:400px; top:0px;">
-
-                </div>
-                <div class="item2" id="item7" style="left:400px; top:100px;">
-
-                </div>
-                <div class="item2" id="item8" style="left:400px; top:200px; margin:0px; height:20%; width:20%">
-
-                </div>
-                <div class="item2" id="item9" style="left:400px; top:300px;">
-
-                </div>
-                <div class="item2" id="item10" style="left:400px; top:400px;">
-
-                </div>
-            </div>*@
-
-        @*<div class="deck">
-                <div id="card1" class="card">
-
-                </div>
-                <div id="card2" class="card">
-
-                </div>
-
-            </div>*@
-
-    </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <hr />
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-</body>
+
 <script src="~/js/card.js"></script>
 <script src="~/js/Position.js"></script>
 <script src="~/js/game.js"></script>
@@ -284,3 +287,4 @@
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/connection.js"></script>
 <script src="~/js/piece.js"></script>
+</body>

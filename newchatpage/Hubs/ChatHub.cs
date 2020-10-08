@@ -13,7 +13,6 @@ namespace newchatpage.Hubs
 {
     public class ChatHub : Hub
     {
-        //public string _roomId { get; set; }
 
         public async Task SendMessage(string user, string message, string roomId)
         {

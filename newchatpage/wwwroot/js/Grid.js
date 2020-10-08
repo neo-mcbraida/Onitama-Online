@@ -3,7 +3,7 @@
         this.container = container;
         this.opponentDeck;
         this.playerDeck;
-        this.board = [0, 100, 200, 300, 400];
+        this.board = [0, 70, 140, 210, 280];
 
         this.userName = urlParams.get('userName');
         this.cardSpace = 0;
@@ -301,8 +301,6 @@
                 }
             }
         }
-
-        
     }
     
 
@@ -338,13 +336,12 @@
     
 
     FindActiveCard(cardId, cards) {
-
-            for (var i = 0; i < cards.length; i++) {
-                if (cards[i].id === cardId) {
-                    return cards[i];
-                    break;
-                }
+        for (var i = 0; i < cards.length; i++) {
+            if (cards[i].id === cardId) {
+                return cards[i];
+                break;
             }
+        }
     }
 
     SetCards(cardId, playerCards) {
@@ -377,9 +374,7 @@
 
         console.log('centre card:', this.centreCard);
         console.log('player card:', this.playerCards[1]);
-        //if (this.canMove === false) {
-        //    this.centreCard.RotateCard();
-        //}
+
     }
 
     GetStartColour() {
