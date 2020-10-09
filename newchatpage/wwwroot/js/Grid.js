@@ -11,17 +11,24 @@
         this.roomId = roomId;
         this.connection = connection;
         this.canMove = true; //, [4, 2] , [0, 2]
-        this.p1 = new Pawn(document.querySelector("#item1"), connection, 1, 0, 0);
-        this.p2 = new Pawn(document.querySelector("#item2"), connection, 2, 0, 0);
-        this.p3 = new Pawn(document.querySelector("#item3"), connection, 3, 0, 1);
-        this.p4 = new Pawn(document.querySelector("#item4"), connection, 4, 0, 0);
-        this.p5 = new Pawn(document.querySelector("#item5"), connection, 5, 0, 0);
+        this.p1 = new PlayerPawn(document.querySelector("#item1"), connection, 1, 0, 0);
+        this.p2 = new PlayerPawn(document.querySelector("#item2"), connection, 2, 0, 0);
+        this.p3 = new PlayerPawn(document.querySelector("#item3"), connection, 3, 0, 1);
+        this.p4 = new PlayerPawn(document.querySelector("#item4"), connection, 4, 0, 0);
+        this.p5 = new PlayerPawn(document.querySelector("#item5"), connection, 5, 0, 0);
         
-        this.p6 = new Pawn(document.querySelector("#item6"), connection, 6, 1, 0);
-        this.p7 = new Pawn(document.querySelector("#item7"), connection, 7, 1, 0);
-        this.p8 = new Pawn(document.querySelector("#item8"), connection, 8, 1, 1);
-        this.p9 = new Pawn(document.querySelector("#item9"), connection, 9, 1, 0);
-        this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
+        this.p6 = new PlayerPawn(document.querySelector("#item6"), connection, 6, 1, 0);
+        this.p7 = new PlayerPawn(document.querySelector("#item7"), connection, 7, 1, 0);
+        this.p8 = new PlayerPawn(document.querySelector("#item8"), connection, 8, 1, 1);
+        this.p9 = new PlayerPawn(document.querySelector("#item9"), connection, 9, 1, 0);
+        this.p10 = new PlayerPawn(document.querySelector("#item10"), connection, 10, 1, 0);
+
+
+        //document.querySelector("#item6"), connection, 6, 1, 0);
+        //this.p7 = new Pawn(document.querySelector("#item7"), connection, 7, 1, 0);
+        //this.p8 = new Pawn(document.querySelector("#item8"), connection, 8, 1, 1);
+        //this.p9 = new Pawn(document.querySelector("#item9"), connection, 9, 1, 0);
+        //this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
 
 
         this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/rabbit.jpg")', connection, 11);
@@ -99,6 +106,14 @@
         this.SetDiv();
     }
 
+    ResetOpponent() {
+        for (let i = 0; i < this.opponent.length; i++) {
+            var pawn = this.opponent[i];
+            this.opponent[i] = undefined;
+            this.opponent[i] = new Pawn(pawn.domElement, pawn.connection, pawn.id, pawn.colour, pawn.type);
+        }
+    }
+
     SetDiv() {
         this.playerCards[0].domElement = document.querySelector("#card1");
         this.playerCards[1].domElement = document.querySelector("#card2");
@@ -165,8 +180,10 @@
         this.centreCard.SetContent();
         for (var i = 0; i < 5; i++) {
             this.player[i].SetCoordinate(this.board);
-            this.opponent[i].SetCoordinate(this.board);
+            //this.opponent[i].SetCoordinate(this.board);
         }
+
+        this.ResetOpponent();
 
         if (this.playerTurn === true) {
             this.StartMove();
@@ -185,7 +202,7 @@
 
     StartMove() {
 
-
+        var selectedCard = selectedCard;
         var selectedCardId = this.selectedCardId;
         var centre = this.centreCard;
         var cards = this.playerCards;
@@ -218,7 +235,7 @@
         };
         this.DragEnd = function (e) {
             if (activeItem != null) {
-                activeItem.dragEnd(board, opponent, selectedCardId, userName);
+                activeItem.dragEnd(board, opponent, selectedCard, userName);
                 activeItem = null;
             }
         };
@@ -237,8 +254,12 @@
             cards.forEach(function (i) {
 
                 if (e.target == i.domElement) {
+                    if (selectedCard != null) {
+                        selectedCard.RemoveHighlight();
+                    }
+                    selectedCard = i;
                     selectedCardId = i.id;
-
+                    i.Highlight();
                     console.log('centre card:', centre);
                     console.log('player card:', i);
                     xIndex = i.xIndex;

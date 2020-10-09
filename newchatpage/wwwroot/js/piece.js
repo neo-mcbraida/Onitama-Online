@@ -4,19 +4,69 @@
         this.domElement = _item;
         this.active = false;
         this.connection = connection;
+        this.container = '#board';
+        
+    }
+
+    
+
+   
+}
+
+class Pawn extends Piece {
+    constructor(domElement, connection, id, colour, type) {
+
+        super(connection, id, domElement);
+        this.colour = colour;//1 for red, 0 for blue
+        this.type = type;//0 for normal, 1 for master
+        this.xIndex;
+        this.yIndex;
         this.top;
         this.left;           
         this.xIndexCur;//store index instead of coordinate
         this.yIndexCur;//so if window is reshaped, xpos in terms of pixels doesnt affect pos
+        this.canMove = true; 
+        //this.opDoor = opponentDoor;
+    }
+
+    setTranslate(xPos, yPos) {
+        //moves dom element to coordinates specified
+        this.domElement.style.left = (xPos.toString() + "px");
+        this.domElement.style.top = (yPos.toString() + "px");
+    }
+
+}
+
+class PlayerPawn extends Pawn{
+    constructor(domElement, connection, id, colour, type) {
+        super(domElement, connection, id, colour, type)
         this.xIndexPrev;
         this.yIndexPrev;
         this.xPrev;
         this.yPrev;
         this.yOffset;
         this.xOffset;
-        this.canMove = true; 
-        this.container = '#board';
-        
+        this.possiblePos = [];
+    }
+
+    Move(roomId, dStart) {
+        //invokes method that sends information about pawn being moved to other client
+        this.connection.invoke("Move", this, roomId, dStart);
+    }
+
+    SwapMove(roomId, pawnId, cardId, player) {
+        //invokes method  that swaps player turn between players
+        var won = this.WinningMove(pawnId);
+        if (won) {
+            this.connection.invoke("EndGame", roomId, pawnId, player)
+        } else {
+            this.connection.invoke("SwapMove", roomId, pawnId, cardId);
+        }
+    }
+
+    SetActive(domElement, id) {
+        this.domElement = domElement;
+        this.id = id;
     }
 
     SetCoordinate(board) {
@@ -26,14 +76,77 @@
         this.xIndexPrev = this.GetClosest(board, this.left);
         this.yIndexCur = this.yIndexPrev;
         this.xIndexCur = this.xIndexPrev;
-       
+
     }
 
-    setTranslate(xPos, yPos) {
-        //moves dom element to coordinates specified
-        this.domElement.style.left = (xPos.toString() + "px");
-        this.domElement.style.top = (yPos.toString() + "px");
+    GetClosest(positions, pos) {//find index of closest space on board 
+        var closest;
+        var index = -1;
+
+        positions.forEach((e) => {
+            var dif = Math.abs(e - pos);//makes result positive
+            // if distance between current space is smaller
+            //than previous closest space
+            if (dif < closest || closest == null) {
+                //update information about closest space
+                closest = dif;
+                index++;
+            }
+        })
+        return index;
+
+
     }
+
+    highlightPos(players) {
+        var grid = [0, 70, 140, 210, 280];
+        for (var i = 0; i < this.xIndex.length; i++) {
+
+            var xIn = this.xIndexPrev + this.xIndex[i];
+            var yIn = this.yIndexPrev + this.yIndex[i];
+            if (this.PosFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
+                var div = document.createElement('div');
+                document.querySelector(this.container).appendChild(div);
+                div.style.left = grid[xIn].toString() + "px";
+                div.style.top = grid[yIn].toString() + "px";
+                div.className = 'placeHolder';
+                var pos = new Position(div, xIn, yIn);
+                this.possiblePos.push(pos);
+            }
+        }
+    }
+
+    drag(e, roomId, container) {
+        //active = true if this pawn is the one being dragged
+        if (this.active) {
+            e.preventDefault();
+
+
+            var offset = $(container).offset();
+
+            if (e.type === "touchmove") {
+                this.top = (e.touches[0].pageY - (this.yOffset + offset.top));
+                this.left = (e.touches[0].pageX - (this.xOffset + offset.left));
+                //mouse
+            } else {
+                this.top = (e.pageY - (this.yOffset + offset.top));
+                this.left = (e.pageX - (this.xOffset + offset.left));
+                //this.currentX = e.clientX - this.initialX;
+                //this.currentY = e.clientY - this.initialY;
+
+            }
+
+            //runs method that sends coordinate of pawn to other clients
+            this.Move(roomId, false);
+
+            //moves the pawn across the screen to where mouse is
+            this.setTranslate(this.left, this.top);
+            //this.setTranslate(this.currentX, this.currentY, this.domElement);
+        }
+
+
+    }
+
 
 
     dragStart(e, container, xIndex, yIndex, players) {
@@ -72,114 +185,8 @@
         }
     }
 
-
-    drag(e, roomId, container) {
-        //active = true if this pawn is the one being dragged
-        if (this.active) {
-            e.preventDefault();
-
-
-            var offset = $(container).offset();
-
-            if (e.type === "touchmove") {
-                this.top = (e.touches[0].pageY - (this.yOffset + offset.top));
-                this.left = (e.touches[0].pageX - (this.xOffset + offset.left));
-                //mouse
-            } else {
-                this.top = (e.pageY - (this.yOffset + offset.top));
-                this.left = (e.pageX - (this.xOffset + offset.left));
-                //this.currentX = e.clientX - this.initialX;
-                //this.currentY = e.clientY - this.initialY;
-
-            }
-
-            //runs method that sends coordinate of pawn to other clients
-            this.Move(roomId, false);
-
-            //moves the pawn across the screen to where mouse is
-            this.setTranslate(this.left, this.top);
-            //this.setTranslate(this.currentX, this.currentY, this.domElement);
-        }
-
-
-    }
-
-
-    
-
-    GetClosest(positions, pos) {//find index of closest space on board 
-        var closest;
-        var index = -1;
-
-        positions.forEach((e) => {
-            var dif = Math.abs(e - pos);//makes result positive
-            // if distance between current space is smaller
-            //than previous closest space
-            if (dif < closest || closest == null) {
-                //update information about closest space
-                closest = dif;
-                index++;
-            }
-        })
-        return index;
-
-
-    }
-    
-
-    Move(roomId, dStart) {
-        //invokes method that sends information about pawn being moved to other client
-        this.connection.invoke("Move", this, roomId, dStart);
-    }
-
-    SwapMove(roomId, pawnId, cardId, player) {
-        //invokes method  that swaps player turn between players
-        var won = this.WinningMove(pawnId);
-        if (won) {
-            this.connection.invoke("EndGame", roomId, pawnId, player)
-        } else {
-            this.connection.invoke("SwapMove", roomId, pawnId, cardId);
-        }
-    }
-
-    SetActive(domElement, id) {
-        this.domElement = domElement;
-        this.id = id;
-    }
-}
-
-class Pawn extends Piece {
-    constructor(domElement, connection, id, colour, type) {
-
-        super(connection, id, domElement);
-        this.colour = colour;//1 for red, 0 for blue
-        this.type = type;//0 for normal, 1 for master
-        this.possiblePos = [];
-        this.xIndex;
-        this.yIndex;
-        //this.opDoor = opponentDoor;
-    }
-
-    highlightPos(players) {
-        var grid = [0, 70, 140, 210, 280];
-        for (var i = 0; i < this.xIndex.length; i++) {
-
-            var xIn = this.xIndexPrev + this.xIndex[i];
-            var yIn = this.yIndexPrev + this.yIndex[i];
-            if (this.PosFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
-                var div = document.createElement('div');
-                document.querySelector(this.container).appendChild(div);
-                div.style.left = grid[xIn].toString() + "px";
-                div.style.top = grid[yIn].toString() + "px";
-                div.className = 'placeHolder';
-                var pos = new Position(div, xIn, yIn);
-                this.possiblePos.push(pos);
-            }
-        }
-    }
-
     WinningMove(pawnId) {
-        
+
         if (this.xIndexCur === 4 && this.yIndexCur === 2) {
             if (this.id === 3) {
                 return true;
@@ -191,7 +198,7 @@ class Pawn extends Piece {
         } else if (pawnId === 3 || pawnId === 8) {
             return true;
         } else { return false; }
-        
+
 
 
     }
@@ -209,7 +216,7 @@ class Pawn extends Piece {
             }
         } else { free = false; }
 
-        if (free) { return null; } else { return pawnId;}
+        if (free) { return null; } else { return pawnId; }
 
     }
 
@@ -235,7 +242,7 @@ class Pawn extends Piece {
         return possible;
     }
 
-    dragEnd(board, opponent, cardId, player) {
+    dragEnd(board, opponent, card, player) {
 
         //board is array of x/y coordinates
         if (this.active) {// i removed board !== null because i forgot what it did, itll probably be fine.
@@ -250,7 +257,8 @@ class Pawn extends Piece {
                 //returns Id of opponent pawn, if it is getting taken
                 var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
-                this.SwapMove(roomId, pawnId, cardId, player);
+                this.SwapMove(roomId, pawnId, card.id, player);
+                card.RemoveHighlight();
             } else {
                 this.xIndexCur = this.xIndexPrev;
                 this.yIndexCur = this.yIndexPrev;
@@ -275,13 +283,13 @@ class Pawn extends Piece {
 }
 
 class Card extends Piece{
-    //this.deck = [100, 250, 400];
     constructor(xIndex, yIndex, colour, source, connection, id) {
         super(connection, id)
         this.xIndex = xIndex;
         this.yIndex = yIndex;
         this.colour = colour;//1 for red, 0 for blue
         this.source = source;
+        this.highlight;
     }
 
     RotateCard() {
@@ -295,21 +303,19 @@ class Card extends Piece{
         this.domElement.style.content = this.source;
     }
 
-    //SetCard(card) {
-    //    var domE = this.domElement;
-    //   // this.con = card.objects;
-    //    this.domElement = domE;
-        
-    //    this.SetContent();
-
-    //}
 
     SetActive(active) {
         console.log(active);
         active = this;
     }
 
+    Highlight() {
+        this.domElement.style.border = "thick solid #ffe667";
+        
+    }
 
-
+    RemoveHighlight() {
+        this.domElement.style.border = "none";
+    }
 
 }
