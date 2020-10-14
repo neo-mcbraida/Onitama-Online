@@ -157,14 +157,9 @@
         for (var i = 0; i < cards.length; i++) {
             delete (cards[i]);
         };
-
     }
 
-
     Start() {
-
-
-
         //if it is players turn
         this.pieces.push(this.opponentCard);//push cards 1st as it is the shorter array
         this.pieces.push(this.opponent);

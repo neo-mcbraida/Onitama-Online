@@ -7,9 +7,6 @@
         this.container = '#board';
         
     }
-
-    
-
    
 }
 
@@ -152,6 +149,7 @@ class PlayerPawn extends Pawn{
     dragStart(e, container, xIndex, yIndex, players) {
         if (this.canMove) {
 
+            this.domElement.style.zIndex = 2;
 
             if (xIndex != null && yIndex != null) {
                 this.xIndex = xIndex;
@@ -269,7 +267,11 @@ class PlayerPawn extends Pawn{
             this.top = board[this.yIndexCur];
 
 
+
             this.setTranslate(this.left, this.top, this.domElement);
+
+
+            this.domElement.style.zIndex = 1;
 
             this.RemoveHighlight();
             //runs method that moves pawn to closest space on board

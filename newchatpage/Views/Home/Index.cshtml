@@ -1,26 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+    <style>
 
-<div class="=col-8">
-    <form action="/Lobby/Index" id="joinForm" method="get">
-        <input type="text" id="userName" name="userName" placeholder="enter name" />
-        <input type="text" id="roomId" name="roomId" placeholder="choose lobby id" />
-        <input type="button" name="join "id="join" />
-    </form>
-</div>
-<script>
-    var userName = document.getElementById('userName');
-    var roomId = document.getElementById('roomId');
-    document.getElementById('join').addEventListener('click', function () {
-        if (roomId.value != "" && userName.value != "") {
-            document.getElementById('joinForm').submit();
-            //submits form if both fields are filled in
-        } else {
-            alert("fill in both fields to join or start a game");
+        #container{
+            margin-top: 200px;
         }
-    });
-</script>
+
+        body {
+            background-image: url("/assets/HomeBackground.jpg");
+            background-size: auto;
+            /*https://wallpaperaccess.com/japanese-samurai-art*/
+        }
+    </style>
+<center>
+    <div id="container">
+        <h1 style="font-size: 100px;">Onitama</h1>
+        <div @*class="=col-8"*@ >
+            <form action="/Lobby/Index" id="joinForm" method="get">
+                <input type="text" id="userName" name="userName" placeholder="enter name" />
+                <input type="text" id="roomId" name="roomId" placeholder="choose lobby id" />
+                <input type="button" name="join "id="join" value="GO!"/>
+            </form>
+        </div>
+        <script>
+            var userName = document.getElementById('userName');
+            var roomId = document.getElementById('roomId');
+            document.getElementById('join').addEventListener('click', function () {
+                if (roomId.value != "" && userName.value != "") {
+                    document.getElementById('joinForm').submit();
+                    //submits form if both fields are filled in
+                } else {
+                    alert("fill in both fields to join or start a game");
+                }
+            });
+        </script>
+    </div>
+</center>
 <div class="row">
     <div class="col-12">
         <hr />
