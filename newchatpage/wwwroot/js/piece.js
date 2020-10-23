@@ -101,12 +101,12 @@ class PlayerPawn extends Pawn{
             var xIn = this.xIndexPrev + this.xIndex[i];
             var yIn = this.yIndexPrev + this.yIndex[i];
             if (this.TileFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
-                var div = document.createElement('div');
+                var div = document.createElement('div');//add highlighted square of possible position to board
                 document.querySelector(this.container).appendChild(div);
                 div.style.left = grid[xIn].toString() + "px";
                 div.style.top = grid[yIn].toString() + "px";
                 div.className = 'placeHolder';
-                var pos = new Position(div, xIn, yIn);
+                var pos = new Position(div, xIn, yIn);//instantiates instance of position class for possible position
                 this.possiblePos.push(pos);
             }
         }
@@ -114,8 +114,8 @@ class PlayerPawn extends Pawn{
 
     PosFree(pawns, xIn, yIn) {
         var canMove = false;
-        for (let i = 0; i < xIn.length; i++) {
-            var xIndex = xIn[i];
+        for (let i = 0; i < xIn.length; i++) {//for each position, is that position available, 
+            var xIndex = xIn[i];//if available, break and return true
             var yIndex = yIn[i];
             if (this.TileFree(pawns, xIndex, yIndex) === null) {
                 canMove = true;
@@ -164,8 +164,7 @@ class PlayerPawn extends Pawn{
             if (xIndex != null && yIndex != null) {
                 this.xIndex = xIndex;
                 this.yIndex = yIndex;
-                this.highlightPos(players);
-
+                this.highlightPos(players);//highlights possible moves for selected pawn and card
             }
             this.Move(roomId, true);
 
@@ -175,13 +174,13 @@ class PlayerPawn extends Pawn{
             e.preventDefault();
 
             var deckOffset = $(container).offset();
-            var _Yoffset = parseInt(this.domElement.style.top, 10)
+            var _Yoffset = parseInt(this.domElement.style.top, 10)//finds offset of pawn before it is moved
             var _Xoffset = parseInt(this.domElement.style.left, 10)
-
-            if (e.type === "touchstart") {
+            //finds starting coordinates of pawn before it is moved
+            if (e.type === "touchstart") {//for touchscreen
                 this.yOffset = e.touches[0].pageY - (_Yoffset + deckOffset.top);
                 this.xOffset = e.touches[0].pageX - (_Xoffset + deckOffset.left);
-            } else {
+            } else {//for mouse
                 this.yOffset = e.pageY - (_Yoffset + deckOffset.top);
                 this.xOffset = e.pageX - (_Xoffset + deckOffset.left);
             }
@@ -194,7 +193,7 @@ class PlayerPawn extends Pawn{
     }
 
     WinningMove(pawnId) {
-
+        //goes through all parameters required for game to be won, if any are met, return true
         if (this.xIndexCur === 4 && this.yIndexCur === 2) {
             if (this.id === 3) {
                 return true;
@@ -206,9 +205,6 @@ class PlayerPawn extends Pawn{
         } else if (pawnId === 3 || pawnId === 8) {
             return true;
         } else { return false; }
-
-
-
     }
 
     TileFree(pawns, xIn, yIn) {
@@ -227,9 +223,6 @@ class PlayerPawn extends Pawn{
         if (free) { return null; } else { return pawnId; }
 
     }
-
-
-
 
     RemoveHighlight() {
         var container = document.querySelector(this.container);//more efficient as it does not have to redefine container for each pos
@@ -276,11 +269,7 @@ class PlayerPawn extends Pawn{
             this.left = board[this.xIndexCur];
             this.top = board[this.yIndexCur];
 
-
-
             this.setTranslate(this.left, this.top, this.domElement);
-
-
             this.domElement.style.zIndex = 1;
 
             this.RemoveHighlight();
@@ -305,6 +294,7 @@ class Card extends Piece{
     }
 
     RotateCard() {
+        //rotates indexes of the card instance
         for (var i = 0; i < this.xIndex.length; i++) {
             this.xIndex[i] = this.xIndex[i] * -1;
             this.yIndex[i] = this.yIndex[i] * -1;
@@ -312,21 +302,24 @@ class Card extends Piece{
     }
 
     SetContent() {
+        //sets image to card div
         this.domElement.style.content = this.source;
     }
 
 
     SetActive(active) {
+        //sets card as active
         console.log(active);
         active = this;
     }
 
     Highlight() {
+        //gives border to card when selected
         this.domElement.style.border = "thick solid #ffe667";
-        
     }
 
     RemoveHighlight() {
+        //removes border of card
         this.domElement.style.border = "none";
     }
 

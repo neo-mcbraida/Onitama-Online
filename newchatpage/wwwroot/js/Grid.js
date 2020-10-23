@@ -23,14 +23,6 @@
         this.p9 = new PlayerPawn(document.querySelector("#item9"), connection, 9, 1, 0);
         this.p10 = new PlayerPawn(document.querySelector("#item10"), connection, 10, 1, 0);
 
-
-        //document.querySelector("#item6"), connection, 6, 1, 0);
-        //this.p7 = new Pawn(document.querySelector("#item7"), connection, 7, 1, 0);
-        //this.p8 = new Pawn(document.querySelector("#item8"), connection, 8, 1, 1);
-        //this.p9 = new Pawn(document.querySelector("#item9"), connection, 9, 1, 0);
-        //this.p10 = new Pawn(document.querySelector("#item10"), connection, 10, 1, 0);
-
-
         this.c1 = new Card([-1, 1, 0], [-1, 1, 2], 0, 'url("/assets/rabbit.jpg")', connection, 11);
         this.c2 = new Card([1, -1, -1, 1], [-2, -1, 1, 2], 1, 'url("/assets/dragon.jpg")', connection, 12);
         this.c3 = new Card([-1, 1, 0], [0, 0, 1], 0, 'url("/assets/ox.jpg")', connection, 13);
@@ -86,7 +78,6 @@
 
     AddCards(cards, centreCard) {
 
-        console.log(cards, centreCard);
         //flip all cards for player two at start, instead of doing for each move
         for (var i = 0; i < cards.length; i++) {
             this.playerCards.push(this.FindActiveCard(cards[0][i].id, this.allCards));
@@ -100,9 +91,7 @@
         this.centreCard = this.FindActiveCard(centreCard.id, this.allCards);
         this.centreCard.RotateCard();
 
-        console.log(this.playerCards, this.opponentCard, this.centreCard);
-
-        this.ClearCards(this.allCards);
+        this.ClearCards(this.allCards);//deletes all other cards being stored in grid class
         this.SetDiv();
     }
 
@@ -111,6 +100,7 @@
             var pawn = this.opponent[i];
             this.opponent[i] = undefined;
             this.opponent[i] = new Pawn(pawn.domElement, pawn.connection, pawn.id, pawn.colour, pawn.type);
+            //changes class of opponent pawns to more abstracted class
         }
     }
 
@@ -123,37 +113,37 @@
     }
 
     ReturnCard() {
+        //selects random card within array of unselected cards
         var index = Math.floor((Math.random() * this.allCards.length) + 1) - 1;
         return this.allCards[index];
     }
 
     GetCard(item) {
-        
+        //adds randomly selected card to array ('item')
         if (Array.isArray(item)) {
             var card = this.ReturnCard();
             item.push(card);
             this.allCards = this.ListRemove(this.allCards, card);
         }
-
-
     }
 
     PopulateCards() {
-        
+        //selects cards for player 1, then 2, then 1, then 2, in that order as that is specified by rules
         this.GetCard(this.playerCards)
         this.GetCard(this.opponentCard);
         this.GetCard(this.playerCards);
         this.GetCard(this.opponentCard);
-
+        //selects middle card last, as specified by rules
         this.centreCard = this.ReturnCard();
 
         this.SetDiv();
 
         this.ClearCards(this.allCards);
-
+        //deletes remaining, unselected cards
     }
 
     ClearCards(cards) {
+        //deletes each card, in 'cards' array
         for (var i = 0; i < cards.length; i++) {
             delete (cards[i]);
         };
@@ -163,7 +153,7 @@
         //if it is players turn
         this.pieces.push(this.opponentCard);//push cards 1st as it is the shorter array
         this.pieces.push(this.opponent);
-
+        //sets image of cards to each div
         for (var i = 0; i < 2; i++) {
             var playcard = this.playerCards[i];
             playcard.SetContent();
@@ -180,6 +170,7 @@
 
         this.ResetOpponent();
 
+        //starts game if players turn is first
         if (this.playerTurn === true) {
             this.StartMove();
         }
@@ -187,11 +178,11 @@
     }
 
     SwapTurn() {
-        if (this.canMove) {
-            if (this.CanMove(this.playerCards, this.player, this.opponent)) {
+        if (this.canMove) {//if it is players turn
+            if (this.CanMove(this.playerCards, this.player, this.opponent)) {//if the player has any moves
                 this.StartMove();
             } else {
-                this.connection.invoke("SwapMove", roomId, null, null, this.userName);
+                this.connection.invoke("SwapMove", roomId, null, null, this.userName);//invokes swap move method, skipping players turn
             }
         } else {
             this.EndMove();
@@ -201,7 +192,6 @@
     StartMove() {
 
         var selectedCard = selectedCard;
-        var selectedCardId = this.selectedCardId;
         var centre = this.centreCard;
         var cards = this.playerCards;
         var opponent = this.opponent;
@@ -215,7 +205,7 @@
         var yIndex = [];
         var xIndex = [];
 
-
+        //dragstart, sets pawn to active, invokes method that highlights any possible positions
         this.DragStart = function (e) {
             player.forEach(function (i) {
                 if (e.target == i.domElement) {
@@ -224,6 +214,7 @@
                 }
             });
         };
+        //drag, sends position of pawn to opponent while it is being dragged
         this.Drag = function (e) {
             if (e != null) {
                 if (activeItem != null) {
@@ -231,6 +222,7 @@
                 }
             }
         };
+        //when pawn is released, invoke method that moves pawn to close possible pos, and swaps move if needed
         this.DragEnd = function (e) {
             if (activeItem != null) {
                 activeItem.dragEnd(board, opponent, selectedCard, userName);
@@ -238,6 +230,8 @@
             }
         };
 
+
+        //event listeners for when a pawn gets clicked on
         //for mouse
         this.container.addEventListener("mousedown", this.DragStart, false);
         this.container.addEventListener("mouseup", this.DragEnd, false);
@@ -247,6 +241,7 @@
         this.container.addEventListener("touchend", this.DragEnd, false);
         this.container.addEventListener("touchmove", this.Drag, false);
 
+        //sets  card to active card
         this.CardSelect = function (e) {
 
             cards.forEach(function (i) {
@@ -257,22 +252,19 @@
                     }
                     selectedCard = i;
                     selectedCardId = i.id;
-                    i.Highlight();
-                    console.log('centre card:', centre);
-                    console.log('player card:', i);
+                    i.Highlight();//adds border to card, to show which card is selected
                     xIndex = i.xIndex;
                     yIndex = i.yIndex;
                 }
             });
 
         };
-
-     
+        //card click evenet listener
         this.playerDeck.addEventListener("click", this.CardSelect, false);
     }
 
     EndMove() {
-
+        //deletes event listeners, so player cannot move
         //for mouse
         this.container.removeEventListener("mousedown", this.DragStart, false);
         this.container.removeEventListener("mouseup", this.DragEnd, false);
@@ -286,20 +278,20 @@
     }
 
  
-    ListRemove(list, item) {
+    ListRemove(list, item) {//simple method to remove elements from an array
         var pHolder = [];
         list.forEach(function (i) {
             if (i !== item) {
                 pHolder.push(i);
             }
         });
-        return pHolder;
+        return pHolder;//returns new array with removed element
     }
 
     RemovePawn(pawnId) {
-
+        //removes pawn from player array, and from the board
         var removed = false;
-        for (var i = 0; i < this.player.length; i++) {
+        for (var i = 0; i < this.player.length; i++) {//if pawn is a players pawn
             if (this.player[i].id === pawnId) {
                 this.container.removeChild(this.player[i].domElement);
                 var removed = this.player[i];
@@ -309,7 +301,7 @@
                 break;
             }
         }
-        if (removed === false) {
+        if (removed === false) {//if pawn belonged to an opponent
             for (var i = 0; i < this.opponent.length; i++) {
                 if (this.opponent[i].id === pawnId) {
                     this.container.removeChild(this.opponent[i].domElement);
@@ -324,14 +316,15 @@
     
 
     SetActive(piece) {
+        //find id of active loop
         var pieces = this.pieces;
 
         outer: for (var i = 0; i < pieces.length; i++) {
             for (var u = 0; u < pieces[i].length; u++) {
                 if (pieces[i][u].id === piece.id) {
                     this.pIndex1 = i;
-                    this.pIndex2 = u;
-                    break outer; 
+                    this.pIndex2 = u;//sets indexes of piece looked for
+                    break outer; //breaks outer loop
                 }
             }
         }
@@ -355,6 +348,7 @@
     
 
     FindActiveCard(cardId, cards) {
+        //finds the card selected between the two cards on the player deck
         for (var i = 0; i < cards.length; i++) {
             if (cards[i].id === cardId) {
                 return cards[i];
@@ -364,11 +358,11 @@
     }
 
     SetCards(cardId, playerCards) {
+        //swaps player card used to make move and the centre card
         var playerCard = this.FindActiveCard(cardId, playerCards);
-        var playerDom;
+        var playerDom;//place holder vars to store player card info temporarily
         var centreDom;
-
- 
+        
         playerCards = this.ListRemove(playerCards, playerCard);
         playerCards.push(this.centreCard);
         playerDom = playerCard.domElement;
@@ -379,7 +373,7 @@
         playerCards[1].domElement = playerDom;
         playerCards[1].SetContent();
 
-        return playerCards;
+        return playerCards;//returns new set of player cards
 
     }
 
@@ -390,10 +384,6 @@
         } else {
             this.opponentCard = this.SetCards(cardId, this.opponentCard);
         }
-
-        console.log('centre card:', this.centreCard);
-        console.log('player card:', this.playerCards[1]);
-
     }
 
     GetStartColour() {
@@ -403,31 +393,19 @@
     }
 
     CanMove(cards, pawns, opponent) {
-        //cards = this.playerCards;
-        //pawns = this.Player;
-       // opponent = this.opponent;
         var canMove = false;
-        //if (cards.len === 0) {
-        //    canMove = true;4
-        //}
-        outer: for (let i = 0; i < 2; i++) {
+        outer: for (let i = 0; i < 2; i++) {//iterates through player's cards
             var card = cards[i];
             var xIn = card.xIndex;
             var yIn = card.yIndex;
-            for (let u = 0; u < pawns.length; u++) {
-                if (pawns[u].PosFree(opponent, xIn, yIn)) {
+            for (let u = 0; u < pawns.length; u++) {//iterates through player's pawns
+                if (pawns[u].PosFree(opponent, xIn, yIn)) {//if a possible move is found, breaks outer loop
                     canMove = true;
                     break outer;
                 }
             }
         }
         
-        return canMove;
+        return canMove;//return whether there is a possible move for the player
     }
-
-    CardCanMove(card) {
-        
-    }
-
-
 }

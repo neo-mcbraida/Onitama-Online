@@ -72,6 +72,7 @@ namespace newchatpage.Hubs
 
         public async Task EndGame(string roomId, int? pawnId, string player)
         {
+            //invokes method in connection.js that ends the game
             await Clients.Group(roomId).SendAsync("EndGame", pawnId, player);
         } 
     }

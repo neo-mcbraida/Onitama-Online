@@ -9,8 +9,7 @@ const userName = urlParams.get('userName');
 //these two lines get the roomId query that is in the URL
 //Disable send button until connection is established
 
-connection.on("SendGameInfo", function (userId) {
-
+connection.on("SendGameInfo", function (userId) 
     game.players.push(userId);
     game.GenerateCards();
     //if this client was the first to join a game this client invokes
@@ -21,7 +20,7 @@ connection.on("SendGameInfo", function (userId) {
 
 });
 
-connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game
+connection.on("CreateSelf", function (roomId, userId) {//instantiates a new Game, with given arguments
     game = new Game(container, userId, connection, roomId)
 });
 
@@ -62,7 +61,7 @@ connection.on("SwapMove", function (pawnId, cardId) {
 
 
 connection.on("EndGame", function (pawnId, player) {
-    game.EndGame(pawnId, player);
+    game.EndGame(pawnId, player);//stops both players moves when invoked, ending the game
 });
 
 
