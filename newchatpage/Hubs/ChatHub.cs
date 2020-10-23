@@ -69,6 +69,6 @@ namespace newchatpage.Hubs
         public async Task EndGame(string roomId, int? pawnId, string player)
         {
             await Clients.Group(roomId).SendAsync("EndGame", pawnId, player);
-        }
+        } 
     }
 }

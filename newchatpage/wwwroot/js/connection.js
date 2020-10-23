@@ -57,6 +57,7 @@ connection.on("Move", function (pawn, dStart) {
 connection.on("SwapMove", function (pawnId, cardId) {
     //runs game method swaps move of players
     game.SwapTurn(pawnId, cardId);
+   
 });
 
 

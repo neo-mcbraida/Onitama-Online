@@ -5,9 +5,8 @@
         this.active = false;
         this.connection = connection;
         this.container = '#board';
-        
     }
-   
+    
 }
 
 class Pawn extends Piece {
@@ -101,7 +100,7 @@ class PlayerPawn extends Pawn{
 
             var xIn = this.xIndexPrev + this.xIndex[i];
             var yIn = this.yIndexPrev + this.yIndex[i];
-            if (this.PosFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
+            if (this.TileFree(players, xIn, yIn) === null) {// if index is out of range of positions on board
                 var div = document.createElement('div');
                 document.querySelector(this.container).appendChild(div);
                 div.style.left = grid[xIn].toString() + "px";
@@ -111,6 +110,19 @@ class PlayerPawn extends Pawn{
                 this.possiblePos.push(pos);
             }
         }
+    }
+
+    PosFree(pawns, xIn, yIn) {
+        var canMove = false;
+        for (let i = 0; i < xIn.length; i++) {
+            var xIndex = xIn[i];
+            var yIndex = yIn[i];
+            if (this.TileFree(pawns, xIndex, yIndex) === null) {
+                canMove = true;
+                break;
+            }
+        }
+        return canMove;
     }
 
     drag(e, roomId, container) {
@@ -143,8 +155,6 @@ class PlayerPawn extends Pawn{
 
 
     }
-
-
 
     dragStart(e, container, xIndex, yIndex, players) {
         if (this.canMove) {
@@ -201,7 +211,7 @@ class PlayerPawn extends Pawn{
 
     }
 
-    PosFree(pawns, xIn, yIn) {
+    TileFree(pawns, xIn, yIn) {
         var free = true;
         var pawnId;
         if (xIn > -1 && yIn > -1 && xIn < 5 && yIn < 5) {
@@ -253,7 +263,7 @@ class PlayerPawn extends Pawn{
                 this.xIndexPrev = this.xIndexCur;
                 this.yIndexPrev = this.yIndexCur;
                 //returns Id of opponent pawn, if it is getting taken
-                var pawnId = this.PosFree(opponent, this.xIndexCur, this.yIndexCur);
+                var pawnId = this.TileFree(opponent, this.xIndexCur, this.yIndexCur);
                 //swap player turns
                 this.SwapMove(roomId, pawnId, card.id, player);
                 card.RemoveHighlight();

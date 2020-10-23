@@ -187,9 +187,12 @@
     }
 
     SwapTurn() {
-
         if (this.canMove) {
-            this.StartMove();
+            if (this.CanMove(this.playerCards, this.player, this.opponent)) {
+                this.StartMove();
+            } else {
+                this.connection.invoke("SwapMove", roomId, null, null);
+            }
         } else {
             this.EndMove();
         }
@@ -394,11 +397,37 @@
     }
 
     GetStartColour() {
-        //first player to join game is blue, added to player list at index0
+        //first player to join game is blue, added to player list at index 0
         //0 is enumeration of blue
-        
         return this.centreCard.colour;
     }
 
+    CanMove(cards, pawns, opponent) {
+        //cards = this.playerCards;
+        //pawns = this.Player;
+       // opponent = this.opponent;
+        var canMove = false;
+        //if (cards.len === 0) {
+        //    canMove = true;4
+        //}
+        outer: for (let i = 0; i < 2; i++) {
+            var card = cards[i];
+            var xIn = card.xIndex;
+            var yIn = card.yIndex;
+            for (let u = 0; u < pawns.length; u++) {
+                if (pawns[u].PosFree(opponent, xIn, yIn)) {
+                    canMove = true;
+                    break outer;
+                }
+            }
+        }
+        
+        return canMove;
+    }
 
-}//make an piece class with object dragging, then add either pawn or card to the piece class, write about it alot in CW
+    CardCanMove(card) {
+        
+    }
+
+
+}

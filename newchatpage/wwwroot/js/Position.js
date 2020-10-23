@@ -6,5 +6,3 @@
         this.yIndex = yIn;
     }
 }
-
-

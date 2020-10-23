@@ -26,11 +26,6 @@ namespace newchatpage.Controllers
         public IActionResult Rules()
         {
             return View();
-          //  Content("<script>window.open('{url}','_blank')</script>");
-            //return Content("<script>window.open('http://www.arcanewonders.com/resources/Onitama_Rulebook.PDF','_blank')</script>");
-
-            //return Redirect("http://www.arcanewonders.com/resources/Onitama_Rulebook.PDF");
-            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
