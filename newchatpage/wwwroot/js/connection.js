@@ -75,6 +75,9 @@ connection.on("ReceiveMessage", function (userName, message) {//this adds any ne
     document.getElementById("messagesList").appendChild(li);
 });
 
+
+
+
 connection.start().then(function () {//this runs the function in ChatHub called join room after the connection is established
     connection.invoke("joinRoom", roomId).catch(function (err) {//and passes roomId as an argument
         return console.error(err.toString());

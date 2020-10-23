@@ -191,7 +191,7 @@
             if (this.CanMove(this.playerCards, this.player, this.opponent)) {
                 this.StartMove();
             } else {
-                this.connection.invoke("SwapMove", roomId, null, null);
+                this.connection.invoke("SwapMove", roomId, null, null, this.userName);
             }
         } else {
             this.EndMove();

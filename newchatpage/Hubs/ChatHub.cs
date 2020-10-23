@@ -59,11 +59,15 @@ namespace newchatpage.Hubs
             await Clients.Group(roomId).SendAsync("StartGame");
         }
 
-        public async Task SwapMove(string roomId, int? pawnId, int cardId)
+        public async Task SwapMove(string roomId, int? pawnId, int cardId, string user)
         {
+            //strings are a reference type, so always nullable, so can be left as is
             //runs method for all cleints in room that swaps the players turn
-            
             await Clients.Group(roomId).SendAsync("SwapMove", pawnId, cardId);
+            if(user != null){
+                string msg = "I cannot move, so I miss my turn";
+                await Clients.Group(roomId).SendAsync("ReceiveMessage", user, msg);
+            }
         }
 
         public async Task EndGame(string roomId, int? pawnId, string player)

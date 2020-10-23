@@ -17,10 +17,12 @@
 
 
     AlertWinner(player) {
-        var myDiv = document.getElementById("winner");
+        var myDiv = document.getElementById("Alert");
         myDiv.innerHTML = (player + " Wins");
         myDiv.style.zIndex = 2;
     }
+
+ 
 
     GenerateCards() {
         this.board.PopulateCards();

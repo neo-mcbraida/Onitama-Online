@@ -56,7 +56,7 @@ class PlayerPawn extends Pawn{
         if (won) {
             this.connection.invoke("EndGame", roomId, pawnId, player)
         } else {
-            this.connection.invoke("SwapMove", roomId, pawnId, cardId);
+            this.connection.invoke("SwapMove", roomId, pawnId, cardId, null);
         }
     }
 
